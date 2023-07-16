@@ -17,6 +17,7 @@
 #pragma once
 
 #include <anthragon/abi/IDummy.h>
+#include <anthragon/core/IoCContainer.h>
 
 /*!
  * @brief Just some trash

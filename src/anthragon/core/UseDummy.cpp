@@ -16,9 +16,29 @@
  */
 #include <anthragon/core/UseDummy.h>
 
+class DumIn : public IDummy
+{
+    public:
+        DumIn(int _a, int _b) : a(_a), b(_b) {}
+
+        void CallDummy() override
+        {
+            throw std::logic_error("The method or operation is not implemented.");
+        }
+
+    private:
+        int a, b;
+};
+
+std::shared_ptr<void> Factory(int a, int b)
+{
+    return std::make_shared<DumIn>(DumIn{a, b});
+}
+
 void UseDummy()
 {
-    IDummy* dummy = nullptr;
+    anthragon::core::IoCContainer container;
+    auto dummy = container.Get<IDummy>("widgets/button/anthragon", 5, 3);
     if (dummy)
     {
         dummy->CallDummy();
