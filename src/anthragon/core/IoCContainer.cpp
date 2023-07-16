@@ -27,13 +27,13 @@ std::shared_ptr<void> ANT_NAMESPACE::core::IoCContainer::Get(const IoCLocator& l
                 case RegistrationType::Redirect:
                     return Get(registration.redirect, abi, hint, invoker);
 
-                case RegistrationType::ExternalSigelton:
-                    hint = RegistrationType::ExternalSigelton;
+                case RegistrationType::ExternalSingleton:
+                    hint = RegistrationType::ExternalSingleton;
                     return std::any_cast<std::shared_ptr<void>>(registration.subject);
 
                 // Factory based (invoker)
-                case RegistrationType::FactorySingelton:
-                    hint = RegistrationType::FactorySingelton;
+                case RegistrationType::FactorySingleton:
+                    hint = RegistrationType::FactorySingleton;
                     if (!registration.subject.has_value())
                     {
                         registration.subject = invoker(registration.factory);

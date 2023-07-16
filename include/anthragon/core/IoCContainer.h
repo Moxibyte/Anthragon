@@ -36,12 +36,12 @@ namespace ANT_NAMESPACE::core
                 /*!
                  * @brief The registered implementation is an external T* 
                 */
-                ExternalSigelton,
+                ExternalSingleton,
 
                 /*!
-                 * @brief The registered implementation is a factory for creating a single instance
+                 * @brief The registered implementation is a factory for creating a single instance Singleton
                 */
-                FactorySingelton,
+                FactorySingleton,
 
                 /*!
                  * @brief The registered implementation is a factory for creating objects
