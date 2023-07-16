@@ -1,0 +1,6 @@
+# Visual studio output
+/.vs
+/out
+
+# Generic cmake output
+/build

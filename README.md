@@ -1,2 +1,2 @@
 # anthragon
-Modern Cross Platform C++ UI library 
+Anthragon is a modern and cross platform C++ GUI library
