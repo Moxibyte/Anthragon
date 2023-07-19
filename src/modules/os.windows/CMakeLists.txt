@@ -1,0 +1,2 @@
+project("antmod-os-windows")
+
