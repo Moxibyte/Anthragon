@@ -26,21 +26,37 @@ class DumIn : public IDummy
             throw std::logic_error("The method or operation is not implemented.");
         }
 
+        static std::shared_ptr<void> Factory(int a, int b)
+        {
+            return std::make_shared<DumIn>(DumIn{ a, b });
+        }
+
     private:
         int a, b;
 };
 
-std::shared_ptr<void> Factory(int a, int b)
-{
-    return std::make_shared<DumIn>(DumIn{a, b});
-}
-
 void UseDummy()
 {
     anthragon::core::IoCContainer container;
-    auto dummy = container.Get<IDummy>("widgets/button/anthragon", 5, 3);
-    if (dummy)
-    {
-        dummy->CallDummy();
-    }
+
+    // External singleton
+    auto d1 = std::make_shared<DumIn>(1, 2);
+    container.RegisterSingleton<IDummy>("d1", d1);
+    auto d1x = container.Get<IDummy>("d1");
+
+    // Factory (singleton)
+    container.RegisterSingleton<IDummy, int, int>("d2", &DumIn::Factory);
+    auto d2x = container.Get<IDummy>("d2", 3, 4);
+    auto d2x2 = container.Get<IDummy>("d2", 5, 6);
+    auto d2x3 = container.Get<IDummy>("d2");
+
+    // Object
+    container.Register<IDummy, int, int>("d3", &DumIn::Factory);
+    auto d3x = container.Get<IDummy>("d3", 11, 12);
+    auto d3x2 = container.Get<IDummy>("d3", 21, 22);
+    auto d3x3 = container.Get<IDummy>("d3", 31, 32);
+
+    // Redirect
+    container.RegisterRedirect("default", "d3");
+    auto ddf = container.Get<IDummy>("default", 101, 102);
 }

@@ -100,6 +100,67 @@ namespace ANT_NAMESPACE::core
             using Invoker = std::function<std::shared_ptr<void>(std::any& factory)>;
 
         public:
+            /*!
+             * @brief Registers implementation with default constructor
+             * @tparam T ABI to register 
+             * @param locator Locator to register on
+            */
+            template<typename T>
+            void Register(const IoCLocator& locator)
+            {
+                std::function<std::shared_ptr<void>()> defaultFactory =
+                    []()
+                    {
+                        return std::make_shared<T>();
+                    };
+                Register<T>(locator, defaultFactory);
+            }
+
+            /*!
+             * @brief Registers implementation with specific constructors
+             * @tparam T ABI to register
+             * @tparam ...Args Factory arguments
+             * @param locator Locator to register on
+             * @param factory Factory for object construction
+            */
+            template<typename T, typename... Args>
+            void Register(const IoCLocator& locator, const std::function<std::shared_ptr<void>(Args...)>& factory)
+            {
+                auto& registration = m_container[locator];
+                registration.type = RegistrationType::FactoryConstruct;
+                registration.abi = &typeid(T);
+                registration.factory = factory;
+            }
+
+            /*!
+             * @brief Registers an existing object as a IoC singleton
+             * @tparam T ABI to register
+             * @param externalObject external managed object
+            */
+            template<typename T>
+            void RegisterSingleton(const IoCLocator& locator, std::shared_ptr<T> externalObject)
+            {
+                auto& registration = m_container[locator];
+                registration.type = RegistrationType::ExternalSingleton;
+                registration.abi = &typeid(T);
+                registration.subject = std::static_pointer_cast<void, T>(externalObject);
+            }
+
+            /*!
+             * @brief Registers a factory for object creation
+             * @tparam T ABI to register
+             * @tparam ...Args Arguments for singleton construction
+             * @param locator Locator to register on
+             * @param factory Factory for singleton creation
+            */
+            template<typename T, typename... Args>
+            void RegisterSingleton(const IoCLocator& locator, const std::function<std::shared_ptr<void>(Args...)>& factory)
+            {
+                auto& registration = m_container[locator];
+                registration.type = RegistrationType::FactorySingleton;
+                registration.abi = &typeid(T);
+                registration.factory = factory;
+            }
 
             /*!
              * @brief Registers an IoC redirection from source to target

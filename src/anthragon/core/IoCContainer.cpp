@@ -18,7 +18,7 @@ std::shared_ptr<void> ANT_NAMESPACE::core::IoCContainer::Get(const IoCLocator& l
     auto it = Query(locator);
     if (it != m_container.end())
     {
-        auto registration = it->second;
+        auto& registration = it->second;
         if (!abi || registration.abi == abi)
         {
             switch (registration.type)
