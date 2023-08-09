@@ -1,12 +1,21 @@
-#include <sdf-render/d3d/context.h>
+#include <sdf-render/d3d/d3d_context.h>
+#include <sdf-render/d3d/d3d_executor.h>
+#include <sdf-render/d3d/d3d_resource.h>
+#include <sdf-render/d3d/d3d_command_list.h>
+
+#include <sdf-render/sdf/sdf_renderstate.h>
 
 #include <iostream>
 
-int d3d_main(std::shared_ptr<ant::sdf::d3d_context>& ctx)
+int d3d_main(ant::sdf::d3d_context::ptr ctx)
 {
     using namespace ant::sdf;
-
+    d3d_executor::ptr executor = std::make_shared<d3d_executor>(ctx);
+    d3d_command_list::ptr list = std::make_shared<d3d_command_list>(ctx);
     
+    sdf_renderstate::ptr state = std::make_shared<sdf_renderstate>(ctx);
+
+
     return 0;
 }
 

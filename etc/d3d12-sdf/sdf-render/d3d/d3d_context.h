@@ -5,12 +5,16 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include <iostream>
 
 namespace ant::sdf
 {
     class d3d_context
     {
+        public:
+            using ptr = std::shared_ptr<d3d_context>;
+
         public:
             d3d_context();
             d3d_context(const d3d_context&) = delete;

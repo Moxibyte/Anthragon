@@ -24,6 +24,22 @@ do { \
     } \
 } while(false)
 
+#define ANT_CHECK_LAST_HR(expr, what) \
+do { \
+    if(!(expr)) \
+    { \
+        HRESULT __inline_hr = GetLastError(); \
+        if(FAILED(__inline_hr)) \
+        { \
+            throw ::ant::sdf::exception(__FUNCTION__, __LINE__, what, __inline_hr); \
+        } \
+        else \
+        { \
+            throw ::ant::sdf::exception(__FUNCTION__, __LINE__, what); \
+        } \
+    } \
+} while(false)
+
 namespace ant::sdf
 {
     class exception : public std::exception

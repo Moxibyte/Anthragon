@@ -7,9 +7,7 @@
 "DescriptorTable(" \
     "SRV(t0, numDescriptors=unbounded, flags=DATA_STATIC_WHILE_SET_AT_EXECUTE)" \
 ")," \
-"DescriptorTable(" \
-    "CBV(b0, numDescriptors=unbounded, flags=DATA_STATIC_WHILE_SET_AT_EXECUTE)" \
-")," \
+"CBV(b0, flags=DATA_STATIC_WHILE_SET_AT_EXECUTE)," \
 "DescriptorTable(" \
     "Sampler(s0, numDescriptors = 2)" \
 ")"
@@ -17,7 +15,7 @@
 /*
 *   CPU: 
 *   - 0         : Textures SRVs (TABEL)
-*   - 1         : SDF Descriptors (TABEL)
+*   - 1         : SDF Descriptros (CBV to arrays in memory)
 *   - 2         : Samplers (TABEL)
 *               : [0] Image
 *               : [1] SDF
@@ -64,7 +62,7 @@ struct ant_sdf_vertex
 struct ant_sdf_pixel
 {
     float4 color        : SV_Target;
-    float  depth        : SV_Depth;
+    // float  depth        : SV_Depth;
 };
 
 
