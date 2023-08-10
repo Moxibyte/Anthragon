@@ -51,6 +51,12 @@
     <ClCompile Include="presentation\window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="d3d\d3d_uploader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sdf\sdf_renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util\exception.h">
@@ -90,6 +96,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="presentation\window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="d3d\d3d_uploader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sdf\sdf_layout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sdf\sdf_renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

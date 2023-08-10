@@ -63,6 +63,20 @@ void ant::sdf::window::begin_frame(d3d_command_list::ptr cmd_list)
     auto rtv_handle = m_rtv_heap->get_cpu(m_buffer_index);
     cmd_list->clear_rtv(rtv_handle);
     cmd_list->om_set_rtv(rtv_handle);
+
+    D3D12_VIEWPORT viewport;
+    viewport.TopLeftX = viewport.TopLeftY = 0;
+    viewport.Width = m_width;
+    viewport.Height = m_height;
+    viewport.MinDepth = 1.f;
+    viewport.MaxDepth = 0.f;
+    cmd_list->rs_set_viewport(viewport);
+
+    D3D12_RECT sc_rect;
+    sc_rect.top = sc_rect.left = 0;
+    sc_rect.right = m_width;
+    sc_rect.bottom = m_height;
+    cmd_list->rs_set_sc_rect(sc_rect);
 }
 
 void ant::sdf::window::end_frame(d3d_command_list::ptr cmd_list)

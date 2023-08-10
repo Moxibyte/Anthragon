@@ -42,6 +42,16 @@ void ant::sdf::d3d_command_list::clear_rtv(D3D12_CPU_DESCRIPTOR_HANDLE rtv)
     m_cmd_list->ClearRenderTargetView(rtv, color, 0, nullptr);
 }
 
+void ant::sdf::d3d_command_list::ia_set_vertex_buffer(size_t size, size_t stride, D3D12_GPU_VIRTUAL_ADDRESS address)
+{
+    D3D12_VERTEX_BUFFER_VIEW vbv{};
+    vbv.BufferLocation = address;
+    vbv.SizeInBytes = size;
+    vbv.StrideInBytes = stride;
+    
+    m_cmd_list->IASetVertexBuffers(0, 1, &vbv);
+}
+
 void ant::sdf::d3d_command_list::execute_sync(d3d_executor::ptr executor)
 {
     ANT_CHECK(is_executing() == false, "Can't dispatch executing while already executing");

@@ -34,5 +34,4 @@ void main(in point ant_sdf_quad_pos pt[1], inout TriangleStream<ant_sdf_vertex> 
     ts.Append(vtx);
     
     ts.RestartStrip();
-
 }

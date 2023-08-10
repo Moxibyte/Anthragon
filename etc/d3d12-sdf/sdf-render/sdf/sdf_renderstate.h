@@ -2,8 +2,11 @@
 
 #include <sdf-render/util/dir.h>
 #include <sdf-render/util/blob.h>
+#include <sdf-render/sdf/sdf_layout.h>
 #include <sdf-render/d3d/d3d_context.h>
+#include <sdf-render/d3d/d3d_uploader.h>
 #include <sdf-render/d3d/d3d_resource.h>
+#include <sdf-render/d3d/d3d_command_list.h>
 #include <sdf-render/d3d/d3d_descriptor_heap.h>
 
 #include <queue>
@@ -29,6 +32,8 @@ namespace ant::sdf
             texture_slot allocate_texture(ID3D12Resource* texture, D3D12_SHADER_RESOURCE_VIEW_DESC& texture_srv);
             void free_texture(texture_slot slot);
 
+            void bind(d3d_command_list::ptr cmd_list, d3d_resource::ptr sdf_descriptors);
+            
         private:
             void create_pso();
             void create_desc_heaps();

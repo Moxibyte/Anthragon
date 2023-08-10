@@ -24,8 +24,13 @@ namespace ant::sdf
 
             void state_transition(d3d_command_list::ptr list, D3D12_RESOURCE_STATES state);
 
+            void* map();
+            void unmap();
+
             inline size_t size() const { return m_size; }
             inline D3D12_RESOURCE_STATES state() const { return m_state; }
+            inline D3D12_GPU_VIRTUAL_ADDRESS gpu_address() { return m_resource->GetGPUVirtualAddress(); }
+            inline comptr<ID3D12Resource2> get_ptr() { return m_resource; }
 
         public:
             static ptr create_upload_buffer(d3d_context::ptr ctx, size_t size);

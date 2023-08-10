@@ -26,8 +26,29 @@ namespace ant::sdf
             void add_resource_barrier(D3D12_RESOURCE_BARRIER& barr);
             void stage_resource_barriers();
 
+            inline void copy_buffer(size_t size, ID3D12Resource* src, size_t src_offset, ID3D12Resource* dst, size_t dst_offset) 
+            { 
+                m_cmd_list->CopyBufferRegion(dst, dst_offset, src, src_offset, size); 
+            }
+
+            template<typename... Args>
+            void set_descriptor_heaps(Args... args)
+            {
+                ID3D12DescriptorHeap* heaps[] = { args... };
+                m_cmd_list->SetDescriptorHeaps(sizeof...(Args), heaps);
+            }
+
             void clear_rtv(D3D12_CPU_DESCRIPTOR_HANDLE rtv);
-            inline void om_set_rtv(D3D12_CPU_DESCRIPTOR_HANDLE rtv) { m_cmd_list->OMSetRenderTargets(1, &rtv, false, nullptr); }
+            inline void set_pso_rs_gfx(ID3D12PipelineState* pso, ID3D12RootSignature* rs) { m_cmd_list->SetPipelineState(pso); m_cmd_list->SetGraphicsRootSignature(rs); };
+            inline void draw(size_t vertex_count) { m_cmd_list->DrawInstanced(vertex_count, 1, 0, 0); }
+            inline void set_graphics_root_descriptor_table(size_t index, D3D12_GPU_DESCRIPTOR_HANDLE handle) { m_cmd_list->SetGraphicsRootDescriptorTable(index, handle); }
+            inline void set_graphics_root_constant_buffer_view(size_t index, D3D12_GPU_VIRTUAL_ADDRESS address) { m_cmd_list->SetGraphicsRootConstantBufferView(index, address); }
+
+            inline void ia_set_primitive_topology(D3D12_PRIMITIVE_TOPOLOGY topology) { m_cmd_list->IASetPrimitiveTopology(topology); }
+            void ia_set_vertex_buffer(size_t size, size_t stride, D3D12_GPU_VIRTUAL_ADDRESS address);
+            inline void rs_set_viewport(const D3D12_VIEWPORT& vp) { m_cmd_list->RSSetViewports(1, &vp); }
+            inline void rs_set_sc_rect(const D3D12_RECT& scr) { m_cmd_list->RSSetScissorRects(1, &scr); }
+            inline void om_set_rtv(const D3D12_CPU_DESCRIPTOR_HANDLE& rtv) { m_cmd_list->OMSetRenderTargets(1, &rtv, false, nullptr); }
 
             void execute_sync(d3d_executor::ptr executor);
             void execute_async(d3d_executor::ptr executor);

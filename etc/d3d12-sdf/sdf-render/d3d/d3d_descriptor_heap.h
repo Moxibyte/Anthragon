@@ -21,6 +21,8 @@ namespace ant::sdf
             D3D12_CPU_DESCRIPTOR_HANDLE get_cpu(size_t index);
             D3D12_GPU_DESCRIPTOR_HANDLE get_gpu(size_t index);
 
+            inline ID3D12DescriptorHeap* get_ptr() { return m_heap; }
+
         private:
             size_t m_count;
             D3D12_DESCRIPTOR_HEAP_TYPE m_type;

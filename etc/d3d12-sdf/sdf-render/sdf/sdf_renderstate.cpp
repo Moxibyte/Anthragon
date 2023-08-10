@@ -25,6 +25,16 @@ void ant::sdf::sdf_renderstate::free_texture(texture_slot slot)
     m_texture_free_list.push(slot);
 }
 
+void ant::sdf::sdf_renderstate::bind(d3d_command_list::ptr cmd_list, d3d_resource::ptr sdf_descriptors)
+{
+    cmd_list->ia_set_primitive_topology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
+    cmd_list->set_pso_rs_gfx(m_pipeline_state, m_root_signature);
+    cmd_list->set_descriptor_heaps(m_desc_heap_textures->get_ptr(), m_desc_heap_samplers->get_ptr());
+    cmd_list->set_graphics_root_descriptor_table(0, m_desc_heap_textures->get_gpu(0));
+    cmd_list->set_graphics_root_constant_buffer_view(1, sdf_descriptors->gpu_address());
+    cmd_list->set_graphics_root_descriptor_table(2, m_desc_heap_samplers->get_gpu(0));
+}
+
 void ant::sdf::sdf_renderstate::create_pso()
 {
     // Files
@@ -67,7 +77,7 @@ void ant::sdf::sdf_renderstate::create_pso()
     psd.StreamOutput.RasterizedStream = 0;
     psd.BlendState.AlphaToCoverageEnable = false;
     psd.BlendState.IndependentBlendEnable = false;
-    psd.BlendState.RenderTarget[0].BlendEnable = true;
+    psd.BlendState.RenderTarget[0].BlendEnable = false;
     psd.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;
     psd.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_ZERO;
     psd.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
@@ -76,6 +86,7 @@ void ant::sdf::sdf_renderstate::create_pso()
     psd.BlendState.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
     psd.BlendState.RenderTarget[0].LogicOpEnable = false;
     psd.BlendState.RenderTarget[0].LogicOp = D3D12_LOGIC_OP_NOOP;
+    psd.BlendState.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
     psd.SampleMask = 0xFFFFFFFF;
     psd.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
     psd.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;

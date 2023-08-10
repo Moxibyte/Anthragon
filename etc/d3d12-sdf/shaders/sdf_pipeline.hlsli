@@ -5,7 +5,7 @@
 #define ANT_SDF_ROOTSIG \
 "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)," \
 "DescriptorTable(" \
-    "SRV(t0, numDescriptors=unbounded, flags=DATA_STATIC_WHILE_SET_AT_EXECUTE)" \
+    "SRV(t0, numDescriptors=unbounded, flags=DESCRIPTORS_VOLATILE)" \
 ")," \
 "CBV(b0, flags=DATA_STATIC_WHILE_SET_AT_EXECUTE)," \
 "DescriptorTable(" \
@@ -15,7 +15,7 @@
 /*
 *   CPU: 
 *   - 0         : Textures SRVs (TABEL)
-*   - 1         : SDF Descriptros (CBV to arrays in memory)
+*   - 1         : SDF Descriptors (CBV to arrays in memory)
 *   - 2         : Samplers (TABEL)
 *               : [0] Image
 *               : [1] SDF

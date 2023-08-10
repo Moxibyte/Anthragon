@@ -32,6 +32,18 @@ void ant::sdf::d3d_resource::state_transition(d3d_command_list::ptr list, D3D12_
     }
 }
 
+void* ant::sdf::d3d_resource::map()
+{
+    void* map = nullptr;
+    ANT_CHECK_HR(m_resource->Map(0, nullptr, &map), "Failed to map resource");
+    return map;
+}
+
+void ant::sdf::d3d_resource::unmap()
+{
+    m_resource->Unmap(0, nullptr);
+}
+
 ant::sdf::d3d_resource::ptr ant::sdf::d3d_resource::create_upload_buffer(d3d_context::ptr ctx, size_t size)
 {
     return create_buffer(ctx, size, D3D12_HEAP_TYPE_UPLOAD, D3D12_RESOURCE_STATE_GENERIC_READ);
