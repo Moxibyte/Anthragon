@@ -27,6 +27,7 @@ namespace ant::sdf
             void bind(d3d_command_list::ptr cmd_list);
             void copy_data(d3d_command_list::ptr cmd_list, d3d_uploader::ptr uploader);
             void draw(d3d_command_list::ptr cmd_list);
+            void set_aa_scaling_factor(float aa_scaling_factor);
 
             void stage_colored_quad(float const pos[2], float const size[2], float const color[4]);
             void stage_ant_sdf_quad_pos(ant_sdf_quad_pos& quad);

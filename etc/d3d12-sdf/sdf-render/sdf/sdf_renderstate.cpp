@@ -33,6 +33,7 @@ void ant::sdf::sdf_renderstate::bind(d3d_command_list::ptr cmd_list, d3d_resourc
     cmd_list->set_graphics_root_descriptor_table(0, m_desc_heap_textures->get_gpu(0));
     cmd_list->set_graphics_root_constant_buffer_view(1, sdf_descriptors->gpu_address());
     cmd_list->set_graphics_root_descriptor_table(2, m_desc_heap_samplers->get_gpu(0));
+    cmd_list->set_graphics_root_32bit_constants(3, 1, &m_aa_scaling_factor);
 }
 
 void ant::sdf::sdf_renderstate::create_pso()
@@ -77,11 +78,11 @@ void ant::sdf::sdf_renderstate::create_pso()
     psd.StreamOutput.RasterizedStream = 0;
     psd.BlendState.AlphaToCoverageEnable = false;
     psd.BlendState.IndependentBlendEnable = false;
-    psd.BlendState.RenderTarget[0].BlendEnable = false;
-    psd.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_ONE;
-    psd.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_ZERO;
+    psd.BlendState.RenderTarget[0].BlendEnable = true;
+    psd.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA_SAT;
+    psd.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
     psd.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-    psd.BlendState.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+    psd.BlendState.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ZERO;
     psd.BlendState.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
     psd.BlendState.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
     psd.BlendState.RenderTarget[0].LogicOpEnable = false;

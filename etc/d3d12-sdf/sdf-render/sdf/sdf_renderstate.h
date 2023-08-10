@@ -33,7 +33,9 @@ namespace ant::sdf
             void free_texture(texture_slot slot);
 
             void bind(d3d_command_list::ptr cmd_list, d3d_resource::ptr sdf_descriptors);
-            
+
+            inline void set_aa_scaling(float scaling_factor) { m_aa_scaling_factor = scaling_factor; }
+
         private:
             void create_pso();
             void create_desc_heaps();
@@ -43,6 +45,8 @@ namespace ant::sdf
             const size_t c_max_texture = 128;
 
             d3d_context::ptr m_ctx;
+
+            float m_aa_scaling_factor = 2.5f;
 
             comptr<ID3D12RootSignature> m_root_signature;
             comptr<ID3D12PipelineState> m_pipeline_state;

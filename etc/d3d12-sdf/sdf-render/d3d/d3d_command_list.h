@@ -43,6 +43,7 @@ namespace ant::sdf
             inline void draw(size_t vertex_count) { m_cmd_list->DrawInstanced(vertex_count, 1, 0, 0); }
             inline void set_graphics_root_descriptor_table(size_t index, D3D12_GPU_DESCRIPTOR_HANDLE handle) { m_cmd_list->SetGraphicsRootDescriptorTable(index, handle); }
             inline void set_graphics_root_constant_buffer_view(size_t index, D3D12_GPU_VIRTUAL_ADDRESS address) { m_cmd_list->SetGraphicsRootConstantBufferView(index, address); }
+            inline void set_graphics_root_32bit_constants(size_t index, size_t count, const void* data) { m_cmd_list->SetGraphicsRoot32BitConstants(index, count, data, 0);  }
 
             inline void ia_set_primitive_topology(D3D12_PRIMITIVE_TOPOLOGY topology) { m_cmd_list->IASetPrimitiveTopology(topology); }
             void ia_set_vertex_buffer(size_t size, size_t stride, D3D12_GPU_VIRTUAL_ADDRESS address);

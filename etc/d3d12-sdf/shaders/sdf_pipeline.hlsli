@@ -7,10 +7,11 @@
 "DescriptorTable(" \
     "SRV(t0, numDescriptors=unbounded, flags=DESCRIPTORS_VOLATILE)" \
 ")," \
-"CBV(b0, flags=DATA_STATIC_WHILE_SET_AT_EXECUTE)," \
+"CBV(b1, flags=DATA_STATIC_WHILE_SET_AT_EXECUTE)," \
 "DescriptorTable(" \
     "Sampler(s0, numDescriptors = 2)" \
-")"
+")," \
+"RootConstants(num32BitConstants=1, b0)"
 
 /*
 *   CPU: 
@@ -19,12 +20,14 @@
 *   - 2         : Samplers (TABEL)
 *               : [0] Image
 *               : [1] SDF
+*   - 3         : AA-Scaling Factor (float)
 *   
 *   GPU:
 *   - t0...     : Texture SRVs
 *   - b0...     : SDF Descriptors
 *   - s0        : Image sampler
 *   - s1        : SDF sampler
+*   - b0,1      : AA-ScalingFactor
 */
 
 // === Memory primitives ===

@@ -4,10 +4,15 @@
 [RootSignature(ANT_SDF_ROOTSIG)]
 void main(in ant_sdf_vertex pxd, out ant_sdf_pixel px)
 {
+    // Compute distance via sdf (This should be some texture lookup later)
     float d = 1.0f - length(pxd.uv);
-    float r = abs(lerp(ddx(pxd.uv.x), ddy(pxd.uv.y), sin(abs(pxd.uv.y) * 1.57079633f)) );
-    float s = smoothstep(0.0f, r * 10.5f, d);
     
-    // px.depth = 0.0f;
-    px.color = float4(pxd.color.rgb * s, 1.0f);
+    // Create AA factor with the use of ddx/ddy
+    float r = lerp(ddx(pxd.uv.x), abs(ddy(pxd.uv.y)), abs(pxd.uv.y));
+    
+    // Calculate the alpha scaling with use of AA + AA-Scaling 
+    float s = smoothstep(0.0f, r * ANT_SDF_aa_scaling, d);
+    
+    // Write the final color (Should be texture lookup later)
+    px.color = float4(pxd.color.rgb, s);
 }

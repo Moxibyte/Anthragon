@@ -8,11 +8,21 @@
 #include <sdf-render/sdf/sdf_renderer.h>
 
 #include <iostream>
+#include <chrono>
 
 const float COLOR_RED[] = { 1.0f, 0.0f, 0.0f, 1.0f };
 const float COLOR_GREEN[] = { 0.0f, 1.0f, 0.0f, 1.0f };
 const float COLOR_BLUE[] = { 0.0f, 0.0f, 1.0f, 1.0f };
 const float COLOR_WHITE[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+const float ANGEL_VELOCITY = 0.0005f;
+
+void compute_positon(float pos[2], float a, float r, float w[2])
+{
+    const float radius = 0.7f;
+    pos[0] = radius * cos(a) * r - w[0] / 2;
+    pos[1] = radius * sin(a) + w[1] / 2;
+}
 
 int d3d_main(ant::sdf::d3d_context::ptr ctx)
 {
@@ -29,6 +39,9 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
     );
     sdf_renderer::ptr state = std::make_shared<sdf_renderer>(ctx);
     
+    std::chrono::high_resolution_clock::time_point now, last;
+    now = std::chrono::high_resolution_clock::now();
+
     while (!wnd->should_close())
     {
         // Window processing
@@ -39,16 +52,31 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
             wnd->resize();
         }
 
-        // TODO: CPU Recording to state
-        float pos1[] = { -0.8, 0.8};
-        float pos2[] = { -0.8, -0.2};
-        float pos3[] = {  0.2, 0.8};
-        float pos4[] = {  0.2, -0.2};
-        float size[] = {0.7f, 0.7f};
-        state->stage_colored_quad(pos1, size, COLOR_RED);
-        state->stage_colored_quad(pos2, size, COLOR_GREEN);
-        state->stage_colored_quad(pos3, size, COLOR_BLUE);
-        state->stage_colored_quad(pos4, size, COLOR_WHITE);
+        // Timing
+        last = now;
+        now = std::chrono::high_resolution_clock::now();
+        auto d = now - last;
+        auto dx = std::chrono::duration_cast<std::chrono::milliseconds>(d).count();
+
+        // Animate angel
+        static float angel = 0.00f;
+        angel += ANGEL_VELOCITY * dx;
+        if (angel > 6.2831853f) angel -= 6.2831853f;
+
+        // Build position from angel
+        float positions[8];
+        float ratio = (float)wnd->get_height() / (float)wnd->get_width();
+        float size[] = {0.5f * ratio, 0.5f};
+        compute_positon(&positions[0], angel + 0.000000f, ratio, size);
+        compute_positon(&positions[2], angel + 1.570796f, ratio, size);
+        compute_positon(&positions[4], angel + 3.141593f, ratio, size);
+        compute_positon(&positions[6], angel + 4.712389f, ratio, size);
+
+        // Stage rendering
+        state->stage_colored_quad(&positions[0], size, COLOR_RED);
+        state->stage_colored_quad(&positions[2], size, COLOR_GREEN);
+        state->stage_colored_quad(&positions[4], size, COLOR_BLUE);
+        state->stage_colored_quad(&positions[6], size, COLOR_WHITE);
 
         // Begin window rendering
         wnd->begin_frame(list);
@@ -87,7 +115,7 @@ int main()
     }
     catch (const std::exception& ex)
     {
-        std::cout << "Exception occured:" << std::endl;
+        std::cout << "Exception occurred:" << std::endl;
         std::cout << ex.what() << std::endl;
         rc = -2;
     }

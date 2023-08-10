@@ -74,3 +74,8 @@ void ant::sdf::sdf_renderer::copy_quads(d3d_command_list::ptr cmd_list, d3d_uplo
 {
     uploader->stage_buffer(quads, sizeof(ant_sdf_quad_pos) * quad_count, 0, m_sdf_quad_buffer->get_ptr(), cmd_list);
 }
+
+void ant::sdf::sdf_renderer::set_aa_scaling_factor(float aa_scaling_factor)
+{
+    m_state->set_aa_scaling(aa_scaling_factor);
+}
