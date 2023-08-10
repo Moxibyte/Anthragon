@@ -2,7 +2,13 @@
 
 HWND ant::sdf::window_factory::new_window(std::wstring_view name, DWORD style, DWORD ex_style, int x, int y, int width, int height, proc msg_proc)
 {
-    return CreateWindowExW(ex_style, (LPCWSTR)m_class_atom, name.data(), style, x, y, width, height, nullptr, nullptr, m_h_instance, new proc(msg_proc));
+    RECT cr;
+    cr.top = cr.left = 0;
+    cr.right = width;
+    cr.bottom = height;
+    AdjustWindowRectEx(&cr, style, false, ex_style);
+
+    return CreateWindowExW(ex_style, (LPCWSTR)m_class_atom, name.data(), style, x, y, cr.right - cr.left, cr.bottom - cr.top, nullptr, nullptr, m_h_instance, new proc(msg_proc));
 }
 
 ant::sdf::window_factory::window_factory() :
