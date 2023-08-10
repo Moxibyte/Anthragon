@@ -36,6 +36,12 @@ void ant::sdf::d3d_command_list::stage_resource_barriers()
     }
 }
 
+void ant::sdf::d3d_command_list::clear_rtv(D3D12_CPU_DESCRIPTOR_HANDLE rtv)
+{
+    float color[] = { .0f, .0f, .0f, .0f, };
+    m_cmd_list->ClearRenderTargetView(rtv, color, 0, nullptr);
+}
+
 void ant::sdf::d3d_command_list::execute_sync(d3d_executor::ptr executor)
 {
     ANT_CHECK(is_executing() == false, "Can't dispatch executing while already executing");

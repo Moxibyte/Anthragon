@@ -92,6 +92,8 @@
     <ClCompile Include="d3d\d3d_context.cpp" />
     <ClCompile Include="d3d\d3d_executor.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="presentation\window.cpp" />
+    <ClCompile Include="presentation\window_factory.cpp" />
     <ClCompile Include="sdf\sdf_renderstate.cpp" />
     <ClCompile Include="util\blob.cpp" />
     <ClCompile Include="util\dir.cpp" />
@@ -103,6 +105,8 @@
     <ClInclude Include="d3d\d3d_resource.h" />
     <ClInclude Include="d3d\d3d_context.h" />
     <ClInclude Include="d3d\d3d_executor.h" />
+    <ClInclude Include="presentation\window.h" />
+    <ClInclude Include="presentation\window_factory.h" />
     <ClInclude Include="sdf\sdf_renderstate.h" />
     <ClInclude Include="util\blob.h" />
     <ClInclude Include="util\comptr.h" />

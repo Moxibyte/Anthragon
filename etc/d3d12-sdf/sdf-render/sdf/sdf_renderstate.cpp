@@ -52,8 +52,7 @@ void ant::sdf::sdf_renderstate::create_pso()
     };
 
     // Pipeline State
-    D3D12_GRAPHICS_PIPELINE_STATE_DESC psd;
-    memset(&psd, 0, sizeof(psd));
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC psd{};
     psd.pRootSignature = m_root_signature;
     psd.VS.pShaderBytecode = shader_data_vs.data();
     psd.VS.BytecodeLength = shader_data_vs.size();
@@ -133,5 +132,27 @@ void ant::sdf::sdf_renderstate::create_desc_heaps()
 
 void ant::sdf::sdf_renderstate::create_samplers()
 {
-
+    D3D12_SAMPLER_DESC texture_sampler{};
+    texture_sampler.Filter = D3D12_FILTER_ANISOTROPIC;
+    texture_sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    texture_sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    texture_sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    texture_sampler.MipLODBias = 0;
+    texture_sampler.MaxAnisotropy = 16;
+    texture_sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+    texture_sampler.MinLOD = 0;
+    texture_sampler.MaxLOD = 0;
+    m_ctx->get_device()->CreateSampler(&texture_sampler, m_desc_heap_samplers->get_cpu(0));
+    
+    D3D12_SAMPLER_DESC sdf_sampler{};
+    sdf_sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+    sdf_sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+    sdf_sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+    sdf_sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
+    sdf_sampler.MipLODBias = 0;
+    sdf_sampler.MaxAnisotropy = 0;
+    sdf_sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+    sdf_sampler.MinLOD = 0;
+    sdf_sampler.MaxLOD = 0;
+    m_ctx->get_device()->CreateSampler(&sdf_sampler, m_desc_heap_samplers->get_cpu(1));
 }

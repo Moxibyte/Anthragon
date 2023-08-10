@@ -45,6 +45,12 @@
     <ClCompile Include="d3d\d3d_descriptor_heap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="presentation\window_factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="presentation\window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="util\exception.h">
@@ -78,6 +84,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="d3d\d3d_descriptor_heap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="presentation\window_factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="presentation\window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

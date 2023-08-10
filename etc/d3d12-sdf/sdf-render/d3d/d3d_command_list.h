@@ -26,6 +26,9 @@ namespace ant::sdf
             void add_resource_barrier(D3D12_RESOURCE_BARRIER& barr);
             void stage_resource_barriers();
 
+            void clear_rtv(D3D12_CPU_DESCRIPTOR_HANDLE rtv);
+            inline void om_set_rtv(D3D12_CPU_DESCRIPTOR_HANDLE rtv) { m_cmd_list->OMSetRenderTargets(1, &rtv, false, nullptr); }
+
             void execute_sync(d3d_executor::ptr executor);
             void execute_async(d3d_executor::ptr executor);
             void execute_async_wait();

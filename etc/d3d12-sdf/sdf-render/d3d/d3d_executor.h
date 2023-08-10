@@ -36,6 +36,7 @@ namespace ant::sdf
             void wait_for_cookie(cookie cookie_value);
             void flush(size_t count = 1);
 
+            inline auto get_queue_ptr() { return m_queue; }
         private:
             cookie signal();
 
