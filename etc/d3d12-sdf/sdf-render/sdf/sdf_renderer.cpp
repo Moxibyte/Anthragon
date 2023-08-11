@@ -40,10 +40,10 @@ void ant::sdf::sdf_renderer::stage_colored_quad(float const pos[2], float const 
     quad.pos_tl[1] = pos[1];
     quad.pos_br[0] = pos[0] + size[0];
     quad.pos_br[1] = pos[1] - size[1];
-    quad.uv_tl[0] = -1.f;
-    quad.uv_tl[1] =  1.f;
-    quad.uv_br[0] =  1.f;
-    quad.uv_br[1] = -1.f;
+    quad.uv_tl[0] = 0.0f;
+    quad.uv_tl[1] = 0.0f;
+    quad.uv_br[0] = 1.f;
+    quad.uv_br[1] = 1.f;
     quad.base_color[0] = color[0];
     quad.base_color[1] = color[1];
     quad.base_color[2] = color[2];

@@ -3,6 +3,7 @@
 #include <sdf-render/d3d/d3d_resource.h>
 #include <sdf-render/d3d/d3d_uploader.h>
 #include <sdf-render/d3d/d3d_command_list.h>
+#include <sdf-render/d3d/d3d_texture_2d_rgba.h>
 #include <sdf-render/presentation/window.h>
 
 #include <sdf-render/sdf/sdf_renderer.h>
@@ -28,7 +29,7 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
 {
     using namespace ant::sdf;
     d3d_executor::ptr executor = std::make_shared<d3d_executor>(ctx);
-    d3d_uploader::ptr uploader = std::make_shared<d3d_uploader>(ctx, 1024 * 64);
+    d3d_uploader::ptr uploader = std::make_shared<d3d_uploader>(ctx, 16 * 1024 * 1024);
     d3d_command_list::ptr list = std::make_shared<d3d_command_list>(ctx);
     
     window::ptr wnd = std::make_shared<window>(
@@ -39,9 +40,17 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
     );
     sdf_renderer::ptr state = std::make_shared<sdf_renderer>(ctx);
     
+    // Images
+    d3d_texture_2d_rgba::ptr texture1 = std::make_shared<d3d_texture_2d_rgba>(ctx, executor, uploader, list, "resources/pix_e1.png");
+
+    // SRVs
+    D3D12_SHADER_RESOURCE_VIEW_DESC srv1;
+    texture1->create_srv(srv1);
+    state->allocate_texture(texture1->get_ptr(), srv1);
+
+    // UI Loop
     std::chrono::high_resolution_clock::time_point now, last;
     now = std::chrono::high_resolution_clock::now();
-
     while (!wnd->should_close())
     {
         // Window processing

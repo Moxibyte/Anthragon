@@ -40,3 +40,16 @@ void ant::sdf::d3d_uploader::close()
         m_mapped_ptr = nullptr;
     }
 }
+
+void ant::sdf::d3d_uploader::stage_texture(ID3D12Resource* resource, const void* data, uint32_t width, uint32_t height, uint32_t bpp, DXGI_FORMAT format, d3d_command_list::ptr command_list)
+{
+    ANT_CHECK(m_mapped_ptr, "Upload buffer not mapped");
+    
+    size_t data_size = height * (width * ((bpp + 7) / 8));
+    ANT_CHECK(m_write_head + data_size <= m_upload_buffer->size(), "Insufficent memory allocated in upload buffer");
+
+    memcpy(&m_mapped_ptr[m_write_head], data, data_size);
+    command_list->copy_texture(m_upload_buffer->get_ptr(), resource, width, height, bpp, format);
+
+    m_write_head += data_size;
+}

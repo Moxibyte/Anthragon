@@ -30,6 +30,7 @@ namespace ant::sdf
             { 
                 m_cmd_list->CopyBufferRegion(dst, dst_offset, src, src_offset, size); 
             }
+            void copy_texture(ID3D12Resource* src, ID3D12Resource* dst, uint32_t width, uint32_t height, uint32_t bpp, DXGI_FORMAT format);
 
             template<typename... Args>
             void set_descriptor_heaps(Args... args)

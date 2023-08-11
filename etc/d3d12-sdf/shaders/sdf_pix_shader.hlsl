@@ -5,14 +5,14 @@
 void main(in ant_sdf_vertex pxd, out ant_sdf_pixel px)
 {
     // Compute distance via sdf (This should be some texture lookup later)
-    float d = 1.0f - length(pxd.uv);
+    float d = 1.0f - length(pxd.us);
     
     // Create AA factor with the use of ddx/ddy
-    float r = lerp(ddx(pxd.uv.x), abs(ddy(pxd.uv.y)), abs(pxd.uv.y));
+    float r = lerp(ddx(pxd.us.x), abs(ddy(pxd.us.y)), abs(pxd.us.y));
     
     // Calculate the alpha scaling with use of AA + AA-Scaling 
     float s = smoothstep(0.0f, r * ANT_SDF_aa_scaling, d);
     
     // Write the final color (Should be texture lookup later)
-    px.color = float4(pxd.color.rgb, s);
+    px.color = float4(pxd.color.rgb * ANT_SFD_textures[0].Sample(ANT_SDF_image_sampler, pxd.uv).rgb, s);
 }

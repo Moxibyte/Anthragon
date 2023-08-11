@@ -35,6 +35,7 @@ namespace ant::sdf
         public:
             static ptr create_upload_buffer(d3d_context::ptr ctx, size_t size);
             static ptr create_default_buffer(d3d_context::ptr ctx, size_t size);
+            static ptr create_texture2d(d3d_context::ptr ctx, uint32_t width, uint32_t height, DXGI_FORMAT format, D3D12_RESOURCE_STATES state);
 
         private:
             static ptr create_buffer(d3d_context::ptr ctx, size_t size, D3D12_HEAP_TYPE heap, D3D12_RESOURCE_STATES state);

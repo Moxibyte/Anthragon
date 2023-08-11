@@ -74,9 +74,26 @@ ant::sdf::d3d_resource::ptr ant::sdf::d3d_resource::create_buffer(d3d_context::p
     return std::make_shared<d3d_resource>(ctx, real_size, heap, std::reference_wrapper(rd), state);
 }
 
+ant::sdf::d3d_resource::ptr ant::sdf::d3d_resource::create_texture2d(d3d_context::ptr ctx, uint32_t width, uint32_t height, DXGI_FORMAT format, D3D12_RESOURCE_STATES state)
+{
+    D3D12_RESOURCE_DESC rd;
+    rd.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    rd.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+    rd.Width = width;
+    rd.Height = height;
+    rd.DepthOrArraySize = 1;
+    rd.MipLevels = 1;
+    rd.Format = format;
+    rd.SampleDesc.Count = 1;
+    rd.SampleDesc.Quality = 0;
+    rd.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    rd.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+    return std::make_shared<d3d_resource>(ctx, -1, D3D12_HEAP_TYPE_DEFAULT, std::reference_wrapper(rd), state);
+}
+
 size_t ant::sdf::d3d_resource::pad_size(size_t in, size_t pad)
 {
     size_t d = in % pad;
     return d == 0 ? in : in + pad - d;
 }
-

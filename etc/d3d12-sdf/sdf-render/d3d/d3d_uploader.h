@@ -24,6 +24,7 @@ namespace ant::sdf
             void reset();
 
             void stage_buffer(const void* data, size_t data_size, size_t target_offset, ID3D12Resource* resource, d3d_command_list::ptr command_list);
+            void stage_texture(ID3D12Resource* resource, const void* data, uint32_t width, uint32_t height, uint32_t bpp, DXGI_FORMAT format, d3d_command_list::ptr command_list);
 
         private:
             void open();

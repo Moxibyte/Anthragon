@@ -110,3 +110,29 @@ void ant::sdf::d3d_command_list::dispatch_executor()
     ANT_CHECK_HR(m_cmd_list->Close(), "Can't close command list");
     m_completion_cookie = m_active_executor->execute(m_cmd_list);
 }
+
+void ant::sdf::d3d_command_list::copy_texture(ID3D12Resource* src, ID3D12Resource* dst, uint32_t width, uint32_t height, uint32_t bpp, DXGI_FORMAT format)
+{
+    D3D12_TEXTURE_COPY_LOCATION src_location;
+    src_location.pResource = src;
+    src_location.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+    src_location.PlacedFootprint.Offset = 0;
+    src_location.PlacedFootprint.Footprint.Width = width;
+    src_location.PlacedFootprint.Footprint.Height = height;
+    src_location.PlacedFootprint.Footprint.Depth = 1;
+    src_location.PlacedFootprint.Footprint.Format = format;
+    src_location.PlacedFootprint.Footprint.RowPitch = width * ((bpp + 7) / 8);
+
+    D3D12_TEXTURE_COPY_LOCATION dst_location;
+    dst_location.pResource = dst;
+    dst_location.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+    dst_location.SubresourceIndex = 0;
+
+    D3D12_BOX box;
+    box.left = box.top = box.front = 0;
+    box.right = width;
+    box.bottom = height;
+    box.back = 1;
+
+    m_cmd_list->CopyTextureRegion(&dst_location, 0, 0, 0, &src_location, &box);
+}

@@ -39,10 +39,10 @@ void ant::sdf::sdf_renderstate::bind(d3d_command_list::ptr cmd_list, d3d_resourc
 void ant::sdf::sdf_renderstate::create_pso()
 {
     // Files
-    blob shader_data_rs(get_binary_directory() / "shaders" / "sdf_pipeline.cso");
-    blob shader_data_vs(get_binary_directory() / "shaders" / "sdf_vtx_shader.cso");
-    blob shader_data_gs(get_binary_directory() / "shaders" / "sdf_geo_shader.cso");
-    blob shader_data_ps(get_binary_directory() / "shaders" / "sdf_pix_shader.cso");
+    blob shader_data_rs(find_file("shaders/sdf_pipeline.cso"));
+    blob shader_data_vs(find_file("shaders/sdf_vtx_shader.cso"));
+    blob shader_data_gs(find_file("shaders/sdf_geo_shader.cso"));
+    blob shader_data_ps(find_file("shaders/sdf_pix_shader.cso"));
 
     // Root Signature
     ANT_CHECK_HR(

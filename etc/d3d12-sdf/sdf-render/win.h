@@ -3,6 +3,7 @@
 #define NOMINMAX
 
 #include <Windows.h>
+#include <wincodec.h>
 #include <sdf-render/util/comptr.h>
 
 #include <dxgi1_6.h>

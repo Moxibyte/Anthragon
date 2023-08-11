@@ -91,6 +91,7 @@
     <ClCompile Include="d3d\d3d_resource.cpp" />
     <ClCompile Include="d3d\d3d_context.cpp" />
     <ClCompile Include="d3d\d3d_executor.cpp" />
+    <ClCompile Include="d3d\d3d_texture_2d_rgba.cpp" />
     <ClCompile Include="d3d\d3d_uploader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="presentation\window.cpp" />
@@ -100,6 +101,7 @@
     <ClCompile Include="util\blob.cpp" />
     <ClCompile Include="util\dir.cpp" />
     <ClCompile Include="util\exception.cpp" />
+    <ClCompile Include="util\image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d\d3d_command_list.h" />
@@ -107,6 +109,7 @@
     <ClInclude Include="d3d\d3d_resource.h" />
     <ClInclude Include="d3d\d3d_context.h" />
     <ClInclude Include="d3d\d3d_executor.h" />
+    <ClInclude Include="d3d\d3d_texture_2d_rgba.h" />
     <ClInclude Include="d3d\d3d_uploader.h" />
     <ClInclude Include="presentation\window.h" />
     <ClInclude Include="presentation\window_factory.h" />
@@ -117,6 +120,7 @@
     <ClInclude Include="util\comptr.h" />
     <ClInclude Include="util\dir.h" />
     <ClInclude Include="util\exception.h" />
+    <ClInclude Include="util\image.h" />
     <ClInclude Include="win.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
