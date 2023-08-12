@@ -33,7 +33,7 @@ void ant::sdf::sdf_renderer::draw(d3d_command_list::ptr cmd_list)
     }
 }
 
-void ant::sdf::sdf_renderer::stage_colored_quad(float const pos[2], float const size[2], float const color[4])
+void ant::sdf::sdf_renderer::stage_quad(float const pos[2], float const size[2], float const color[4], sdf_renderstate::texture_slot texture)
 {
     ant_sdf_quad_pos quad{};
     quad.pos_tl[0] = pos[0];
@@ -48,6 +48,7 @@ void ant::sdf::sdf_renderer::stage_colored_quad(float const pos[2], float const 
     quad.base_color[1] = color[1];
     quad.base_color[2] = color[2];
     quad.base_color[3] = color[3];
+    quad.texture_id = texture;
 
     stage_ant_sdf_quad_pos(quad);
 }

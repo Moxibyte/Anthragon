@@ -29,7 +29,7 @@ namespace ant::sdf
             void draw(d3d_command_list::ptr cmd_list);
             void set_aa_scaling_factor(float aa_scaling_factor);
 
-            void stage_colored_quad(float const pos[2], float const size[2], float const color[4]);
+            void stage_quad(float const pos[2], float const size[2], float const color[4], sdf_renderstate::texture_slot texture);
             void stage_ant_sdf_quad_pos(ant_sdf_quad_pos& quad);
 
             inline sdf_renderstate::texture_slot allocate_texture(ID3D12Resource* texture, D3D12_SHADER_RESOURCE_VIEW_DESC& texture_srv) { return m_state->allocate_texture(texture, texture_srv); }

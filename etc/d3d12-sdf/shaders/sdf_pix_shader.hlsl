@@ -14,5 +14,5 @@ void main(in ant_sdf_vertex pxd, out ant_sdf_pixel px)
     float s = smoothstep(0.0f, r * ANT_SDF_aa_scaling, d);
     
     // Write the final color (Should be texture lookup later)
-    px.color = float4(pxd.color.rgb * ANT_SFD_textures[0].Sample(ANT_SDF_image_sampler, pxd.uv).rgb, s);
+    px.color = float4(pxd.color.rgb * ANT_SFD_textures[pxd.texture_id].Sample(ANT_SDF_image_sampler, pxd.uv).rgb, s);
 }
