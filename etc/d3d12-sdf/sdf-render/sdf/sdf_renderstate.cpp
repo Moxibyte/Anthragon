@@ -31,9 +31,10 @@ void ant::sdf::sdf_renderstate::bind(d3d_command_list::ptr cmd_list, d3d_resourc
     cmd_list->set_pso_rs_gfx(m_pipeline_state, m_root_signature);
     cmd_list->set_descriptor_heaps(m_desc_heap_textures->get_ptr(), m_desc_heap_samplers->get_ptr());
     cmd_list->set_graphics_root_descriptor_table(0, m_desc_heap_textures->get_gpu(0));
-    cmd_list->set_graphics_root_constant_buffer_view(1, sdf_descriptors->gpu_address());
-    cmd_list->set_graphics_root_descriptor_table(2, m_desc_heap_samplers->get_gpu(0));
-    cmd_list->set_graphics_root_32bit_constants(3, 1, &m_aa_scaling_factor);
+    cmd_list->set_graphics_root_descriptor_table(1, m_desc_heap_textures->get_gpu(0));
+    cmd_list->set_graphics_root_constant_buffer_view(2, sdf_descriptors->gpu_address());
+    cmd_list->set_graphics_root_descriptor_table(3, m_desc_heap_samplers->get_gpu(0));
+    cmd_list->set_graphics_root_32bit_constants(4, 1, &m_aa_scaling_factor);
 }
 
 void ant::sdf::sdf_renderstate::create_pso()

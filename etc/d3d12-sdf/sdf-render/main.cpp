@@ -33,13 +33,17 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
     d3d_command_list::ptr list = std::make_shared<d3d_command_list>(ctx);
     
     window::ptr wnd = std::make_shared<window>(
-        ctx, executor, L"Demo 1234", 
+        ctx, executor, L"SDF Sample Renderer", 
         WS_OVERLAPPEDWINDOW | WS_VISIBLE,
         WS_EX_OVERLAPPEDWINDOW, 
         10, 10, 500, 500
     );
+
+    // SDF Preprocessing
     sdf_renderer::ptr state = std::make_shared<sdf_renderer>(ctx);
-    
+    state->process_sdfs(128);
+    state->upload_sdf_data(executor, uploader, list);
+
     // Images
     d3d_texture_2d_rgba::ptr texture1 = std::make_shared<d3d_texture_2d_rgba>(ctx, executor, uploader, list, "resources/pix_e1.png");
     d3d_texture_2d_rgba::ptr texture2 = std::make_shared<d3d_texture_2d_rgba>(ctx, executor, uploader, list, "resources/pix_e2.png");

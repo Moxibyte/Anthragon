@@ -5,9 +5,12 @@
 #define ANT_SDF_ROOTSIG \
 "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)," \
 "DescriptorTable(" \
-    "SRV(t0, numDescriptors=unbounded, flags=DESCRIPTORS_VOLATILE)" \
+    "SRV(t0, space=0, numDescriptors=unbounded, flags=DESCRIPTORS_VOLATILE)" \
 ")," \
-"CBV(b1, flags=DATA_STATIC_WHILE_SET_AT_EXECUTE)," \
+"DescriptorTable(" \
+    "SRV(t0, space=1, numDescriptors=unbounded, flags=DESCRIPTORS_VOLATILE)" \
+")," \
+"CBV(b1, flags=DATA_VOLATILE)," \
 "DescriptorTable(" \
     "Sampler(s0, numDescriptors = 2)" \
 ")," \
@@ -16,25 +19,28 @@
 /*
 *   CPU: 
 *   - 0         : Textures SRVs (TABEL)
-*   - 1         : SDF Descriptors (CBV to arrays in memory)
-*   - 2         : Samplers (TABEL)
+*   - 1         : Textures SRVs (TABEL)
+*   - 2         : SDF Descriptors (CBV to arrays in memory)
+*   - 3         : Samplers (TABEL)
 *               : [0] Image
 *               : [1] SDF
-*   - 3         : AA-Scaling Factor (float)
+*   - 4         : AA-Scaling Factor (float)
 *   
 *   GPU:
-*   - t0...     : Texture SRVs
-*   - b0...     : SDF Descriptors
+*   - t0...     : Texture SRVs (space 0 & 1)
+*   - b1        : SDF Descriptors
 *   - s0        : Image sampler
 *   - s1        : SDF sampler
-*   - b0,1      : AA-ScalingFactor
+*   - b0        : AA-ScalingFactor
 */
 
 // === Memory primitives ===
 struct ant_sdf_desc
 {
-    uint sdf_textures[8];
-    float sdf_weights[8];
+    uint texture_id;
+    float texture_weight;
+    float2 uv_tl;
+    float2 uv_br;
 };
 
 // === Pipeline ABI ===
@@ -55,8 +61,9 @@ struct ant_sdf_vertex
 {
     float4 pos          : SV_Position;
     float4 color        : Color;
-    float2 uv           : TexcoordUV;
-    float2 us           : TexcoordUS;
+    float2 uv           : TexcoordUV; // Texture
+    float2 ux           : TexcoordUX; // SDF
+    float2 us           : TexcoordUS; // NDCs
     uint   sdf_desc_idx : SDFDesc;
     uint   texture_id   : Texture;
 };

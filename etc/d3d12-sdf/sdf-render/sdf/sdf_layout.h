@@ -17,7 +17,9 @@ namespace ant::sdf
 
     struct ant_sdf_desc
     {
-        uint32_t sdf_textures[8];
-        float sdf_weights[8];
+        uint32_t texture_id;
+        float texture_weight;
+        float uv_tl[2];
+        float uv_br[2];
     };
 }

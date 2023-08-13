@@ -96,12 +96,15 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="presentation\window.cpp" />
     <ClCompile Include="presentation\window_factory.cpp" />
+    <ClCompile Include="sdf\sdf_rasterizer.cpp" />
     <ClCompile Include="sdf\sdf_renderer.cpp" />
     <ClCompile Include="sdf\sdf_renderstate.cpp" />
+    <ClCompile Include="sdf\sdf_texture.cpp" />
     <ClCompile Include="util\blob.cpp" />
     <ClCompile Include="util\dir.cpp" />
     <ClCompile Include="util\exception.cpp" />
     <ClCompile Include="util\image.cpp" />
+    <ClCompile Include="util\stb_rect_pack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3d\d3d_command_list.h" />
@@ -113,14 +116,17 @@
     <ClInclude Include="d3d\d3d_uploader.h" />
     <ClInclude Include="presentation\window.h" />
     <ClInclude Include="presentation\window_factory.h" />
+    <ClInclude Include="sdf\sdf_rasterizer.h" />
     <ClInclude Include="sdf\sdf_layout.h" />
     <ClInclude Include="sdf\sdf_renderer.h" />
     <ClInclude Include="sdf\sdf_renderstate.h" />
+    <ClInclude Include="sdf\sdf_texture.h" />
     <ClInclude Include="util\blob.h" />
     <ClInclude Include="util\comptr.h" />
     <ClInclude Include="util\dir.h" />
     <ClInclude Include="util\exception.h" />
     <ClInclude Include="util\image.h" />
+    <ClInclude Include="util\stb_rect_pack.h" />
     <ClInclude Include="win.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
