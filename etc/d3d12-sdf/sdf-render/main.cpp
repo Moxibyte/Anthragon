@@ -61,6 +61,10 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
     auto ref3 = state->allocate_texture(texture3->get_ptr(), srv3);
     auto ref4 = state->allocate_texture(texture4->get_ptr(), srv4);
 
+    // SDFs
+    auto sdfd1 = state->allocate_sdf_desc(sdf_renderer::SDFID_circle);
+    auto sdfd2 = state->allocate_sdf_desc(sdf_renderer::SDFID_triangle);
+
     // UI Loop
     std::chrono::high_resolution_clock::time_point now, last;
     now = std::chrono::high_resolution_clock::now();
@@ -95,10 +99,10 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
         compute_positon(&positions[6], angel + 4.712389f, ratio, size);
 
         // Stage rendering
-        state->stage_quad(&positions[0], size, COLOR_WHITE, ref1);
-        state->stage_quad(&positions[2], size, COLOR_WHITE, ref2);
-        state->stage_quad(&positions[4], size, COLOR_WHITE, ref3);
-        state->stage_quad(&positions[6], size, COLOR_WHITE, ref4);
+        state->stage_quad(&positions[0], size, COLOR_WHITE, ref1, sdfd1);
+        state->stage_quad(&positions[2], size, COLOR_WHITE, ref2, sdfd2);
+        state->stage_quad(&positions[4], size, COLOR_WHITE, ref3, sdfd1);
+        state->stage_quad(&positions[6], size, COLOR_WHITE, ref4, sdfd2);
 
         // Begin window rendering
         wnd->begin_frame(list);

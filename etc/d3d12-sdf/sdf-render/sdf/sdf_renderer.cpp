@@ -11,6 +11,11 @@ ant::sdf::sdf_renderer::sdf_renderer(d3d_context::ptr ctx) :
     m_sdfs.push_back({ &sdf_renderer::SDF_never, 1, 1 });
     m_sdfs.push_back({ &sdf_renderer::SDF_circle, 32, 32 });
     m_sdfs.push_back({ &sdf_renderer::SDF_triangle, 32, 32 });
+
+    for (size_t i = 0; i < ANT_SDF__NUM_SDF_DESCS; i += 8)
+    {
+        m_desc_free_list.push(i);
+    }
 }
 
 void ant::sdf::sdf_renderer::bind(d3d_command_list::ptr cmd_list)
@@ -40,7 +45,7 @@ void ant::sdf::sdf_renderer::draw(d3d_command_list::ptr cmd_list)
     }
 }
 
-void ant::sdf::sdf_renderer::stage_quad(float const pos[2], float const size[2], float const color[4], sdf_renderstate::texture_slot texture)
+void ant::sdf::sdf_renderer::stage_quad(float const pos[2], float const size[2], float const color[4], sdf_renderstate::texture_slot texture, sdf_desc_slot sdf_desc)
 {
     ant_sdf_quad_pos quad{};
     quad.pos_tl[0] = pos[0];
@@ -56,7 +61,7 @@ void ant::sdf::sdf_renderer::stage_quad(float const pos[2], float const size[2],
     quad.base_color[2] = color[2];
     quad.base_color[3] = color[3];
     quad.texture_id = texture;
-    quad.sdf_desc_idx = 0;
+    quad.sdf_desc_idx = sdf_desc;
 
     stage_ant_sdf_quad_pos(quad);
 }
@@ -65,6 +70,24 @@ void ant::sdf::sdf_renderer::stage_ant_sdf_quad_pos(ant_sdf_quad_pos& quad)
 {
     ANT_CHECK(m_quad_count < ANT_SDF__NUM_SDF_QUADS, "Maximum number of quads exeeded");
     memcpy(&m_quads[m_quad_count++], &quad, sizeof(ant_sdf_quad_pos));
+}
+
+ant::sdf::sdf_renderer::sdf_desc_slot ant::sdf::sdf_renderer::allocate_sdf_desc(sdf_index sdf_function, float weight)
+{
+    if (!m_desc_free_list.empty())
+    {
+        auto slot = m_desc_free_list.front();
+        m_desc_free_list.pop();
+
+        describe_sdf(slot, sdf_function, weight);
+        for (size_t i = 1; i < 8; i++)
+        {
+            describe_sdf(slot + i, SDFID_never, 0.0f);
+        }
+
+        return slot;
+    }
+    return -1;
 }
 
 void ant::sdf::sdf_renderer::begin_copy(d3d_command_list::ptr cmd_list)
@@ -163,6 +186,14 @@ bool ant::sdf::sdf_renderer::sdf_pack_iteration(bool commit, int offset, int cou
     }
 }
 
+void ant::sdf::sdf_renderer::describe_sdf(sdf_desc_slot slot, sdf_index sdf_function, float weight)
+{
+    m_descs[slot].texture_id = m_sdf_info[sdf_function].texture_id;
+    m_descs[slot].texture_weight = weight;
+    memcpy(&m_descs[slot].uv_tl, &m_sdf_info[sdf_function].uv_tl, sizeof(float) * 2);
+    memcpy(&m_descs[slot].uv_br, &m_sdf_info[sdf_function].uv_br, sizeof(float) * 2);
+}
+
 void ant::sdf::sdf_renderer::upload_sdf_data(d3d_executor::ptr executor, d3d_uploader::ptr uploader, d3d_command_list::ptr cmd_list)
 {
     std::vector<std::vector<float>> texture_data(m_sdf_texture_count);
@@ -207,12 +238,6 @@ void ant::sdf::sdf_renderer::upload_sdf_data(d3d_executor::ptr executor, d3d_upl
 
     m_sdfs.clear();
     m_sdf_cache.clear();
-
-    const size_t id = 2;
-    m_descs[0].texture_id = m_sdf_info[id].texture_id;
-    m_descs[0].texture_weight = 1.0f;
-    memcpy(&m_descs[0].uv_tl, &m_sdf_info[id].uv_tl, sizeof(float) * 2);
-    memcpy(&m_descs[0].uv_br, &m_sdf_info[id].uv_br, sizeof(float) * 2);
 }
 
 float ant::sdf::sdf_renderer::SDF_always(float x, float y)
@@ -232,26 +257,7 @@ float ant::sdf::sdf_renderer::SDF_circle(float x, float y)
 
 float ant::sdf::sdf_renderer::SDF_triangle(float x, float y)
 {
-    /*
-    static const float k = sqrt(3.0);
-    static const float r = 1.0f;
-
-    x = abs(x) - r;
-    y = y + r / k;
-    if (x + k * y > 0.0)
-    {
-        x = x - k * y;
-        y = -1 * k * x - y;
-        x /= 2;
-        y /= 2;
-    }
-    x -= std::clamp<float>(x, -2.0 * r, 0.0);
-    return -1 * sqrtf(x * x + y * y) * (y > 0 ? 1 : -1);
-    */
-
-    x = fabs(x);
-    y = (1.0f + y) / 2;
-    float d = fabs(-1.0f * x + y + 1.0f) / 1.41421356f;
-
-    return 1.0f - d;
+    x = fabs(x);                                    // Range was "-1 to 1" NOW ITS: "0 to 1" (Right half of triangle)
+    y = (1.0f + y) / 2;                             // Range was "-1 to 1" NOW ITS: "(0 to 2) / 2" THAT IS: "0 to 1" (Rescale of half triangle)
+    return (-1.0f * x - y + 1.0f) / 1.41421356f;    // Signed distance between P(x,y) and the line "y = -1x + 1" THAT IS "0 = -1x - y + 1"
 }

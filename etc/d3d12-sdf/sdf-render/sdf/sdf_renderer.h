@@ -8,6 +8,7 @@
 #include <sdf-render/util/stb_rect_pack.h>
 
 #include <array>
+#include <queue>
 #include <vector>
 #include <algorithm>
 
@@ -21,10 +22,12 @@ namespace ant::sdf
         public:
             using ptr = std::shared_ptr<sdf_renderer>;
             using sdf_index = size_t;
+            using sdf_desc_slot = size_t;
             
             static constexpr sdf_index SDFID_always = 0;
             static constexpr sdf_index SDFID_never = 1;
             static constexpr sdf_index SDFID_circle = 2;
+            static constexpr sdf_index SDFID_triangle = 3;
 
             struct sdf_desc
             {
@@ -67,11 +70,11 @@ namespace ant::sdf
             void draw(d3d_command_list::ptr cmd_list);
             void set_aa_scaling_factor(float aa_scaling_factor);
 
-            void stage_quad(float const pos[2], float const size[2], float const color[4], sdf_renderstate::texture_slot texture);
+            void stage_quad(float const pos[2], float const size[2], float const color[4], sdf_renderstate::texture_slot texture, sdf_desc_slot sdf_desc);
             void stage_ant_sdf_quad_pos(ant_sdf_quad_pos& quad);
 
             inline sdf_renderstate::texture_slot allocate_texture(ID3D12Resource* texture, D3D12_SHADER_RESOURCE_VIEW_DESC& texture_srv) { return m_state->allocate_texture(texture, texture_srv); }
-            inline ant_sdf_desc* get_desc(size_t idx) { return &m_descs[idx * 8]; }
+            sdf_desc_slot allocate_sdf_desc(sdf_index sdf_function, float weight = 1.0f);
 
         private:
             void begin_copy(d3d_command_list::ptr cmd_list);
@@ -79,6 +82,8 @@ namespace ant::sdf
             void copy_quads(d3d_command_list::ptr cmd_list, d3d_uploader::ptr uploader, ant_sdf_quad_pos* quads, size_t quad_count);
 
             bool sdf_pack_iteration(bool commit, int offset, int count, int size);
+
+            void describe_sdf(sdf_desc_slot slot, sdf_index sdf_function, float weight);
 
         private:
             static float SDF_always(float x, float y);
@@ -95,7 +100,9 @@ namespace ant::sdf
 
             size_t m_quad_count = 0;
             std::array<ant_sdf_quad_pos, ANT_SDF__NUM_SDF_QUADS> m_quads;
+
             std::array<ant_sdf_desc, ANT_SDF__NUM_SDF_DESCS> m_descs;
+            std::queue<sdf_desc_slot> m_desc_free_list;
 
             uint32_t m_sdf_texture_count = 0;
             uint32_t m_sdf_texture_size = 0;
