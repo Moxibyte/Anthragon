@@ -11,6 +11,7 @@ namespace ant::sdf
             // In: x/y in NDC (-1.0f ... 0.0f ... 1.0f)
             // Out: Distance (- --> Outside; + --> Inside; 0 On edge
             using raster_function = std::function<float(float ndc_x, float ndc_y)>;
+            static constexpr uint32_t OVERSCAN = 1;
             
         public:
             static uint32_t adjust_size(uint32_t wh);

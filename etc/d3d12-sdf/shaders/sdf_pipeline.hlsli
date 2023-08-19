@@ -38,7 +38,7 @@
 struct ant_sdf_desc
 {
     uint texture_id;
-    float texture_weight;
+    float offset;
     float2 uv_tl;
     float2 uv_br;
 };

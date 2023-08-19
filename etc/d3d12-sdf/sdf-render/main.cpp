@@ -62,8 +62,10 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
     auto ref4 = state->allocate_texture(texture4->get_ptr(), srv4);
 
     // SDFs
-    auto sdfd1 = state->allocate_sdf_desc(sdf_renderer::SDFID_circle);
-    auto sdfd2 = state->allocate_sdf_desc(sdf_renderer::SDFID_triangle);
+    auto sdfd1 = state->allocate_sdf_desc(sdf_renderer::SDFID_always);
+    auto sdfd2 = state->allocate_sdf_desc(sdf_renderer::SDFID_ring, 0.1f);
+    auto sdfd3 = state->allocate_sdf_desc(sdf_renderer::SDFID_circle);
+    auto sdfd4 = state->allocate_sdf_desc(sdf_renderer::SDFID_triangle);
 
     // UI Loop
     std::chrono::high_resolution_clock::time_point now, last;
@@ -101,8 +103,8 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
         // Stage rendering
         state->stage_quad(&positions[0], size, COLOR_WHITE, ref1, sdfd1);
         state->stage_quad(&positions[2], size, COLOR_WHITE, ref2, sdfd2);
-        state->stage_quad(&positions[4], size, COLOR_WHITE, ref3, sdfd1);
-        state->stage_quad(&positions[6], size, COLOR_WHITE, ref4, sdfd2);
+        state->stage_quad(&positions[4], size, COLOR_WHITE, ref3, sdfd3);
+        state->stage_quad(&positions[6], size, COLOR_WHITE, ref4, sdfd4);
 
         // Begin window rendering
         wnd->begin_frame(list);
@@ -144,6 +146,8 @@ int main()
         std::cout << "Exception occurred:" << std::endl;
         std::cout << ex.what() << std::endl;
         rc = -2;
+
+        MessageBoxA(nullptr, ex.what(), "Exception occurred", MB_OK | MB_ICONEXCLAMATION);
     }
 
     // Final msg pull

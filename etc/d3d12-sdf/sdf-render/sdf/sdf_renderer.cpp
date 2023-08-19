@@ -11,6 +11,7 @@ ant::sdf::sdf_renderer::sdf_renderer(d3d_context::ptr ctx) :
     m_sdfs.push_back({ &sdf_renderer::SDF_never, 1, 1 });
     m_sdfs.push_back({ &sdf_renderer::SDF_circle, 32, 32 });
     m_sdfs.push_back({ &sdf_renderer::SDF_triangle, 32, 32 });
+    m_sdfs.push_back({ &sdf_renderer::SDF_ring, 64, 64 });
 
     for (size_t i = 0; i < ANT_SDF__NUM_SDF_DESCS; i += 8)
     {
@@ -72,14 +73,14 @@ void ant::sdf::sdf_renderer::stage_ant_sdf_quad_pos(ant_sdf_quad_pos& quad)
     memcpy(&m_quads[m_quad_count++], &quad, sizeof(ant_sdf_quad_pos));
 }
 
-ant::sdf::sdf_renderer::sdf_desc_slot ant::sdf::sdf_renderer::allocate_sdf_desc(sdf_index sdf_function, float weight)
+ant::sdf::sdf_renderer::sdf_desc_slot ant::sdf::sdf_renderer::allocate_sdf_desc(sdf_index sdf_function, float offset)
 {
     if (!m_desc_free_list.empty())
     {
         auto slot = m_desc_free_list.front();
         m_desc_free_list.pop();
 
-        describe_sdf(slot, sdf_function, weight);
+        describe_sdf(slot, sdf_function, offset);
         for (size_t i = 1; i < 8; i++)
         {
             describe_sdf(slot + i, SDFID_never, 0.0f);
@@ -162,8 +163,8 @@ bool ant::sdf::sdf_renderer::sdf_pack_iteration(bool commit, int offset, int cou
     for (int i = 0; i < count; i++)
     {
         rects[i].id = offset + i;
-        rects[i].w = m_sdfs[offset + i].raster_width;
-        rects[i].h = m_sdfs[offset + i].raster_height;
+        rects[i].w = m_sdfs[offset + i].raster_width + sdf_rasterizer::OVERSCAN * 2;
+        rects[i].h = m_sdfs[offset + i].raster_height + sdf_rasterizer::OVERSCAN * 2;
     }
 
     stbrp_init_target(&ctx, size, size, nodes.data(), count);
@@ -186,10 +187,10 @@ bool ant::sdf::sdf_renderer::sdf_pack_iteration(bool commit, int offset, int cou
     }
 }
 
-void ant::sdf::sdf_renderer::describe_sdf(sdf_desc_slot slot, sdf_index sdf_function, float weight)
+void ant::sdf::sdf_renderer::describe_sdf(sdf_desc_slot slot, sdf_index sdf_function, float offset)
 {
     m_descs[slot].texture_id = m_sdf_info[sdf_function].texture_id;
-    m_descs[slot].texture_weight = weight;
+    m_descs[slot].offset = offset;
     memcpy(&m_descs[slot].uv_tl, &m_sdf_info[sdf_function].uv_tl, sizeof(float) * 2);
     memcpy(&m_descs[slot].uv_br, &m_sdf_info[sdf_function].uv_br, sizeof(float) * 2);
 }
@@ -223,16 +224,16 @@ void ant::sdf::sdf_renderer::upload_sdf_data(d3d_executor::ptr executor, d3d_upl
         D3D12_SHADER_RESOURCE_VIEW_DESC srv;
         texture->create_srv(srv);
 
-        const float dxy = 1.0f / (m_sdf_texture_size - 1);
+        const float dxy = 1.0f / m_sdf_texture_size;
 
         auto slot_id = allocate_texture(texture->get_ptr(), srv);
         for (size_t idx : idxs)
         {
             m_sdf_info[idx].texture_id = slot_id;
-            m_sdf_info[idx].uv_tl[0] = m_sdf_cache[idx].offset_x * dxy;
-            m_sdf_info[idx].uv_tl[1] = m_sdf_cache[idx].offset_y * dxy;
-            m_sdf_info[idx].uv_br[0] = (m_sdf_cache[idx].offset_x + m_sdfs[idx].raster_width - 1) * dxy;
-            m_sdf_info[idx].uv_br[1] = (m_sdf_cache[idx].offset_y + m_sdfs[idx].raster_height - 1) * dxy;
+            m_sdf_info[idx].uv_tl[0] = (m_sdf_cache[idx].offset_x + sdf_rasterizer::OVERSCAN) * dxy;
+            m_sdf_info[idx].uv_tl[1] = (m_sdf_cache[idx].offset_y + sdf_rasterizer::OVERSCAN) * dxy;
+            m_sdf_info[idx].uv_br[0] = (m_sdf_cache[idx].offset_x + sdf_rasterizer::OVERSCAN + m_sdfs[idx].raster_width) * dxy;
+            m_sdf_info[idx].uv_br[1] = (m_sdf_cache[idx].offset_y + sdf_rasterizer::OVERSCAN + m_sdfs[idx].raster_height) * dxy;
         }
     }
 
@@ -242,7 +243,7 @@ void ant::sdf::sdf_renderer::upload_sdf_data(d3d_executor::ptr executor, d3d_upl
 
 float ant::sdf::sdf_renderer::SDF_always(float x, float y)
 {
-    return 0.0f;
+    return 1.0f;
 }
 
 float ant::sdf::sdf_renderer::SDF_never(float x, float y)
@@ -260,4 +261,10 @@ float ant::sdf::sdf_renderer::SDF_triangle(float x, float y)
     x = fabs(x);                                    // Range was "-1 to 1" NOW ITS: "0 to 1" (Right half of triangle)
     y = (1.0f + y) / 2;                             // Range was "-1 to 1" NOW ITS: "(0 to 2) / 2" THAT IS: "0 to 1" (Rescale of half triangle)
     return (-1.0f * x - y + 1.0f) / 1.41421356f;    // Signed distance between P(x,y) and the line "y = -1x + 1" THAT IS "0 = -1x - y + 1"
+}
+
+float ant::sdf::sdf_renderer::SDF_ring(float x, float y)
+{
+    float d = 0.8f - sqrtf(x * x + y * y);
+    return -1.0f * fabs(d);
 }

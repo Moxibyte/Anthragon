@@ -28,6 +28,7 @@ namespace ant::sdf
             static constexpr sdf_index SDFID_never = 1;
             static constexpr sdf_index SDFID_circle = 2;
             static constexpr sdf_index SDFID_triangle = 3;
+            static constexpr sdf_index SDFID_ring = 4;
 
             struct sdf_desc
             {
@@ -74,7 +75,7 @@ namespace ant::sdf
             void stage_ant_sdf_quad_pos(ant_sdf_quad_pos& quad);
 
             inline sdf_renderstate::texture_slot allocate_texture(ID3D12Resource* texture, D3D12_SHADER_RESOURCE_VIEW_DESC& texture_srv) { return m_state->allocate_texture(texture, texture_srv); }
-            sdf_desc_slot allocate_sdf_desc(sdf_index sdf_function, float weight = 1.0f);
+            sdf_desc_slot allocate_sdf_desc(sdf_index sdf_function, float offset = 0.0f);
 
         private:
             void begin_copy(d3d_command_list::ptr cmd_list);
@@ -83,13 +84,14 @@ namespace ant::sdf
 
             bool sdf_pack_iteration(bool commit, int offset, int count, int size);
 
-            void describe_sdf(sdf_desc_slot slot, sdf_index sdf_function, float weight);
+            void describe_sdf(sdf_desc_slot slot, sdf_index sdf_function, float offset);
 
         private:
             static float SDF_always(float x, float y);
             static float SDF_never(float x, float y);
             static float SDF_circle(float x, float y);
             static float SDF_triangle(float x, float y);
+            static float SDF_ring(float x, float y);
 
         private:
             d3d_context::ptr m_ctx;

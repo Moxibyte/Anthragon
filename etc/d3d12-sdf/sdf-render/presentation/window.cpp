@@ -96,7 +96,7 @@ void ant::sdf::window::resize()
 {
     release_buffers();
 
-    ANT_CHECK_HR(m_swap_chain->ResizeBuffers(2, m_width, m_height, DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH), "Failed to resize swap chain");
+    m_swap_chain->ResizeBuffers(2, m_width, m_height, DXGI_FORMAT_UNKNOWN, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
     m_buffer_index = m_swap_chain->GetCurrentBackBufferIndex();
 
     get_buffers();
