@@ -62,7 +62,7 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
     auto ref4 = state->allocate_texture(texture4->get_ptr(), srv4);
 
     // SDFs
-    auto sdfd1 = state->allocate_sdf_desc(sdf_renderer::SDFID_always);
+    auto sdfd1 = state->allocate_sdf_desc(sdf_renderer::SDFID_line, 0.05f);
     auto sdfd2 = state->allocate_sdf_desc(sdf_renderer::SDFID_ring, 0.1f);
     auto sdfd3 = state->allocate_sdf_desc(sdf_renderer::SDFID_circle);
     auto sdfd4 = state->allocate_sdf_desc(sdf_renderer::SDFID_triangle);

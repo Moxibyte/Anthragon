@@ -29,6 +29,7 @@ namespace ant::sdf
             static constexpr sdf_index SDFID_circle = 2;
             static constexpr sdf_index SDFID_triangle = 3;
             static constexpr sdf_index SDFID_ring = 4;
+            static constexpr sdf_index SDFID_line = 5;
 
             struct sdf_desc
             {
@@ -92,6 +93,7 @@ namespace ant::sdf
             static float SDF_circle(float x, float y);
             static float SDF_triangle(float x, float y);
             static float SDF_ring(float x, float y);
+            static float SDF_line(float x, float y);
 
         private:
             d3d_context::ptr m_ctx;

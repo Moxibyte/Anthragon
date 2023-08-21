@@ -9,9 +9,10 @@ ant::sdf::sdf_renderer::sdf_renderer(d3d_context::ptr ctx) :
 
     m_sdfs.push_back({ &sdf_renderer::SDF_always, 1, 1 });
     m_sdfs.push_back({ &sdf_renderer::SDF_never, 1, 1 });
-    m_sdfs.push_back({ &sdf_renderer::SDF_circle, 32, 32 });
-    m_sdfs.push_back({ &sdf_renderer::SDF_triangle, 32, 32 });
-    m_sdfs.push_back({ &sdf_renderer::SDF_ring, 64, 64 });
+    m_sdfs.push_back({ &sdf_renderer::SDF_circle, 17, 17 });
+    m_sdfs.push_back({ &sdf_renderer::SDF_triangle, 17, 17 });
+    m_sdfs.push_back({ &sdf_renderer::SDF_ring, 31, 31 });
+    m_sdfs.push_back({ &sdf_renderer::SDF_line, 5, 5 });
 
     for (size_t i = 0; i < ANT_SDF__NUM_SDF_DESCS; i += 8)
     {
@@ -267,4 +268,9 @@ float ant::sdf::sdf_renderer::SDF_ring(float x, float y)
 {
     float d = 0.8f - sqrtf(x * x + y * y);
     return -1.0f * fabs(d);
+}
+
+float ant::sdf::sdf_renderer::SDF_line(float x, float y)
+{
+    return -1.0f * fabs(y);
 }
