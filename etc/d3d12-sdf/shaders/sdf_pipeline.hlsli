@@ -1,6 +1,8 @@
 #ifndef SDF_PIPELINE_H
 #define SDF_PIPELINE_H
 
+#define ANT_SDF__MAX_SDF_TEXTURES 8
+
 // === Root signature === 
 #define ANT_SDF_ROOTSIG \
 "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT)," \

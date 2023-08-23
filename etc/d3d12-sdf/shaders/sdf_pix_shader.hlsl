@@ -12,7 +12,8 @@ float ant_sdf_sample(float2 ux, uint idx)
 float ant_sdf_sample_all(float2 ux, uint idx)
 {
     float d = ant_sdf_sample(ux, idx);
-    [unroll] for(uint i = 1; i < 8; i++)
+    [unroll]
+    for (uint i = 1; i < ANT_SDF__MAX_SDF_TEXTURES; i++)
     {
         d = max(d, ant_sdf_sample(ux, idx + i));
     }
@@ -32,5 +33,6 @@ void main(in ant_sdf_vertex pxd, out ant_sdf_pixel px)
     float s = smoothstep(0.0f, r * ANT_SDF_aa_scaling, d);
     
     // Write the final color (Should be texture lookup later)
-    px.color = float4(pxd.color.rgb * ANT_SFD_color_tex[pxd.texture_id].Sample(ANT_SDF_image_sampler, pxd.uv).rgb, s);
+    float4 color = pxd.color * ANT_SFD_color_tex[pxd.texture_id].Sample(ANT_SDF_image_sampler, pxd.uv);
+    px.color = float4(color.rgb * color.a, s);
 }
