@@ -14,7 +14,7 @@
 "DescriptorTable(" \
     "Sampler(s0, numDescriptors = 2)" \
 ")," \
-"RootConstants(num32BitConstants=1, b0)"
+"RootConstants(num32BitConstants=2, b0)"
 
 /*
 *   CPU: 
@@ -25,13 +25,15 @@
 *               : [0] Image
 *               : [1] SDF
 *   - 4         : AA-Scaling Factor (float)
+*   - 5         : Aspect ratio (float)
 *   
 *   GPU:
 *   - t0...     : Texture SRVs (space 0 & 1)
-*   - b1        : SDF Descriptors
+*   - b2        : SDF Descriptors
 *   - s0        : Image sampler
 *   - s1        : SDF sampler
 *   - b0        : AA-ScalingFactor
+*   - b1        : Aspect ration correction 
 */
 
 // === Memory primitives ===
@@ -47,13 +49,16 @@ struct ant_sdf_desc
 // point format
 struct ant_sdf_quad_pos
 {
-    float2 pos_tl       : TopLeft;
-    float2 pos_br       : BottomRight;
-    float2 uv_tl        : TopLeftUV;
-    float2 uv_br        : BottomRightUV;
-    float4 base_color   : Color;
-    uint   sdf_desc_idx : SDFDesc;
-    uint   texture_id   : Texture;
+    float2 pos          : Position;         // Anchor / Point
+    uint   sdf_desc_idx : SDFDesc;          // SDF
+    uint   texture_id   : Texture;          // TEXTURE
+    
+    float4 span         : Span;             // Point to quad expansion (lx, ly, rx, ry)
+    
+    float2 uv_tl        : TopLeftUV;        // UV (TEXTURE)
+    float2 uv_br        : BottomRightUV;    // UV (TEXTURE)
+    
+    float4 base_color   : Color;            // Base color to multiply with texture
 };
 
 // triangle format

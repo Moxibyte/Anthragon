@@ -10,7 +10,7 @@ void main(in ant_sdf_vertex pxd, out ant_sdf_pixel px)
     float d = ANT_SFD_sdf_tex[sdf_tex_idx].Sample(ANT_SDF_sdf_sampler, pxd.ux) + ANT_SDF_sdf_descs_e[sdf_idx].offset;
 
     // Create AA factor with the use of ddx/ddy
-    float r = lerp(ddx(pxd.us.x), abs(ddy(pxd.us.y)), abs(pxd.us.y));
+    float r = lerp(abs(ddx(pxd.us.x)), abs(ddy(pxd.us.y)), abs(pxd.us.y));
     
     // Calculate the alpha scaling with use of AA + AA-Scaling 
     float s = smoothstep(0.0f, r * ANT_SDF_aa_scaling, d);
@@ -19,5 +19,7 @@ void main(in ant_sdf_vertex pxd, out ant_sdf_pixel px)
     px.color = float4(pxd.color.rgb * ANT_SFD_color_tex[pxd.texture_id].Sample(ANT_SDF_image_sampler, pxd.uv).rgb, s);
     
     // px.color = float4(d, d, d, 1.0f);
-    // px.color = float4(pxd.ux, 0.0f, 1.0f);
+    // px.color = float4(r, r, r, 1.0f);
+    // px.color = float4(s, s, s, 1.0f);
+    // px.color = float4(pxd.us, 0.0f, 1.0f);
 }

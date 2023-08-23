@@ -21,7 +21,7 @@ const float ANGEL_VELOCITY = 0.0005f;
 void compute_positon(float pos[2], float a, float r, float w[2])
 {
     const float radius = 0.7f;
-    pos[0] = radius * cos(a) * r - w[0] / 2;
+    pos[0] = radius * cos(a) - w[0] / 2;
     pos[1] = radius * sin(a) + w[1] / 2;
 }
 
@@ -94,17 +94,20 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
         // Build position from angel
         float positions[8];
         float ratio = (float)wnd->get_height() / (float)wnd->get_width();
-        float size[] = {0.5f * ratio, 0.5f};
+        float size[] = {0.5f, 0.5f};
         compute_positon(&positions[0], angel + 0.000000f, ratio, size);
         compute_positon(&positions[2], angel + 1.570796f, ratio, size);
         compute_positon(&positions[4], angel + 3.141593f, ratio, size);
         compute_positon(&positions[6], angel + 4.712389f, ratio, size);
+        
+        // SDF config
+        state->set_aspect_ratio(ratio);
 
         // Stage rendering
-        state->stage_quad(&positions[0], size, COLOR_WHITE, ref1, sdfd1);
-        state->stage_quad(&positions[2], size, COLOR_WHITE, ref2, sdfd2);
-        state->stage_quad(&positions[4], size, COLOR_WHITE, ref3, sdfd3);
-        state->stage_quad(&positions[6], size, COLOR_WHITE, ref4, sdfd4);
+        state->quad_atl(&positions[0], size, angel + 4.712389f, COLOR_WHITE, ref1, sdfd1);
+        state->quad_atl(&positions[2], size, angel + 3.141593f, COLOR_WHITE, ref2, sdfd2);
+        state->quad_atl(&positions[4], size, angel + 1.570796f, COLOR_WHITE, ref3, sdfd3);
+        state->quad_atl(&positions[6], size, angel + 0.000000f, COLOR_WHITE, ref4, sdfd4);
 
         // Begin window rendering
         wnd->begin_frame(list);

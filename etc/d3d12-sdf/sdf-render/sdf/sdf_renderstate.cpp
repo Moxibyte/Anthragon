@@ -34,7 +34,7 @@ void ant::sdf::sdf_renderstate::bind(d3d_command_list::ptr cmd_list, d3d_resourc
     cmd_list->set_graphics_root_descriptor_table(1, m_desc_heap_textures->get_gpu(0));
     cmd_list->set_graphics_root_constant_buffer_view(2, sdf_descriptors->gpu_address());
     cmd_list->set_graphics_root_descriptor_table(3, m_desc_heap_samplers->get_gpu(0));
-    cmd_list->set_graphics_root_32bit_constants(4, 1, &m_aa_scaling_factor);
+    cmd_list->set_graphics_root_32bit_constants(4, 2, &m_config);
 }
 
 void ant::sdf::sdf_renderstate::create_pso()
@@ -54,13 +54,13 @@ void ant::sdf::sdf_renderstate::create_pso()
     // Input layout
     D3D12_INPUT_ELEMENT_DESC input_layout[] =
     {
-        { "TopLeft", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "BottomRight", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "TopLeftUV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "BottomRightUV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "Color", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "SDFDesc", 0, DXGI_FORMAT_R32_UINT, 0, 48, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "Texture", 0, DXGI_FORMAT_R32_UINT, 0, 52, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "SDFDesc", 0, DXGI_FORMAT_R32_UINT, 0, 8, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "Texture", 0, DXGI_FORMAT_R32_UINT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "Span", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "TopLeftUV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "BottomRightUV", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 40, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+        { "Color", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 48, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
     };
 
     // Pipeline State

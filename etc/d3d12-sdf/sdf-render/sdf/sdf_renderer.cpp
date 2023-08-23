@@ -47,15 +47,19 @@ void ant::sdf::sdf_renderer::draw(d3d_command_list::ptr cmd_list)
     }
 }
 
-void ant::sdf::sdf_renderer::stage_quad(float const pos[2], float const size[2], float const color[4], sdf_renderstate::texture_slot texture, sdf_desc_slot sdf_desc)
+void ant::sdf::sdf_renderer::quad_atl(float const pos[2], float const size[2], float rotation, float const color[4], sdf_renderstate::texture_slot texture, sdf_desc_slot sdf_desc)
 {
+    float cror = rotation + 3.1415926535897932384626433832795f * 1.5f;
+
     ant_sdf_quad_pos quad{};
-    quad.pos_tl[0] = pos[0];
-    quad.pos_tl[1] = pos[1];
-    quad.pos_br[0] = pos[0] + size[0];
-    quad.pos_br[1] = pos[1] - size[1];
-    quad.uv_tl[0] = 0.0f;
-    quad.uv_tl[1] = 0.0f;
+    quad.pos[0] = pos[0];
+    quad.pos[1] = pos[1];
+    quad.span[0] = 0.0f;
+    quad.span[1] = 0.0f;
+    quad.span[2] = cosf(cror)* size[0] - sinf(cror) * (-1.f * size[1]);
+    quad.span[3] = sinf(cror)* size[0] + cosf(cror) * (-1.f * size[1]);
+    quad.uv_tl[0] = 0.f;
+    quad.uv_tl[1] = 0.f;
     quad.uv_br[0] = 1.f;
     quad.uv_br[1] = 1.f;
     quad.base_color[0] = color[0];
@@ -112,6 +116,11 @@ void ant::sdf::sdf_renderer::copy_quads(d3d_command_list::ptr cmd_list, d3d_uplo
 void ant::sdf::sdf_renderer::set_aa_scaling_factor(float aa_scaling_factor)
 {
     m_state->set_aa_scaling(aa_scaling_factor);
+}
+
+void ant::sdf::sdf_renderer::set_aspect_ratio(float aspect_ratio)
+{
+    m_state->set_aspect_ratio(aspect_ratio);
 }
 
 void ant::sdf::sdf_renderer::process_sdfs(uint32_t textureSize)

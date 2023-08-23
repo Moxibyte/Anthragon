@@ -12,6 +12,10 @@ cbuffer             ANT_SDF_sdf_descs       : register(b1)
 {
     ant_sdf_desc ANT_SDF_sdf_descs_e[1];
 }
-float               ANT_SDF_aa_scaling      : register(b0);
+cbuffer ANT_SDF_config : register(b0)
+{
+    float           ANT_SDF_aa_scaling;
+    float           ANT_SDF_aspect_ratio;
+}
 
 #endif

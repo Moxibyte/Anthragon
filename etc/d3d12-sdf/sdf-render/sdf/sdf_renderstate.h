@@ -34,7 +34,8 @@ namespace ant::sdf
 
             void bind(d3d_command_list::ptr cmd_list, d3d_resource::ptr sdf_descriptors);
 
-            inline void set_aa_scaling(float scaling_factor) { m_aa_scaling_factor = scaling_factor; }
+            inline void set_aa_scaling(float scaling_factor) { m_config.aa_factor = scaling_factor; }
+            inline void set_aspect_ratio(float aspect_ratio) { m_config.aspect_ratio = aspect_ratio; }
 
         private:
             void create_pso();
@@ -46,7 +47,7 @@ namespace ant::sdf
 
             d3d_context::ptr m_ctx;
 
-            float m_aa_scaling_factor = 2.5f;
+            ant_sdf_config m_config;
 
             comptr<ID3D12RootSignature> m_root_signature;
             comptr<ID3D12PipelineState> m_pipeline_state;
