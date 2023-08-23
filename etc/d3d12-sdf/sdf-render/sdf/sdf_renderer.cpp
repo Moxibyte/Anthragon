@@ -96,6 +96,11 @@ ant::sdf::sdf_renderer::sdf_desc_slot ant::sdf::sdf_renderer::allocate_sdf_desc(
     return -1;
 }
 
+void ant::sdf::sdf_renderer::set_sdf_desc(sdf_desc_slot slot, sdf_index sdf_function, float offset)
+{
+    describe_sdf(slot, sdf_function, offset);
+}
+
 void ant::sdf::sdf_renderer::begin_copy(d3d_command_list::ptr cmd_list)
 {
     m_sdf_desc_buffer->state_transition(cmd_list, D3D12_RESOURCE_STATE_COPY_DEST);

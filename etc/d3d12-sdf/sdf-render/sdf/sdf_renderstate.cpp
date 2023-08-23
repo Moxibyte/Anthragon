@@ -80,10 +80,10 @@ void ant::sdf::sdf_renderstate::create_pso()
     psd.BlendState.AlphaToCoverageEnable = false;
     psd.BlendState.IndependentBlendEnable = false;
     psd.BlendState.RenderTarget[0].BlendEnable = true;
-    psd.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA_SAT;
-    psd.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+    psd.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+    psd.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
     psd.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-    psd.BlendState.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ZERO;
+    psd.BlendState.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
     psd.BlendState.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
     psd.BlendState.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
     psd.BlendState.RenderTarget[0].LogicOpEnable = false;

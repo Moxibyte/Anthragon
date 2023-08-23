@@ -16,7 +16,7 @@ const float COLOR_GREEN[] = { 0.0f, 1.0f, 0.0f, 1.0f };
 const float COLOR_BLUE[] = { 0.0f, 0.0f, 1.0f, 1.0f };
 const float COLOR_WHITE[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-const float ANGEL_VELOCITY = 0.0005f;
+const float ANGEL_VELOCITY = 0;// 0.0005f;
 
 void compute_positon(float pos[2], float a, float r, float w[2])
 {
@@ -63,6 +63,9 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
 
     // SDFs
     auto sdfd1 = state->allocate_sdf_desc(sdf_renderer::SDFID_line, 0.05f);
+    state->set_sdf_desc(sdfd1 + 1, sdf_renderer::SDFID_triangle);
+    state->set_sdf_desc(sdfd1 + 2, sdf_renderer::SDFID_ring, 0.1f);
+
     auto sdfd2 = state->allocate_sdf_desc(sdf_renderer::SDFID_ring, 0.1f);
     auto sdfd3 = state->allocate_sdf_desc(sdf_renderer::SDFID_circle);
     auto sdfd4 = state->allocate_sdf_desc(sdf_renderer::SDFID_triangle);
@@ -104,10 +107,13 @@ int d3d_main(ant::sdf::d3d_context::ptr ctx)
         state->set_aspect_ratio(ratio);
 
         // Stage rendering
-        state->quad_atl(&positions[0], size, angel + 4.712389f, COLOR_WHITE, ref1, sdfd1);
-        state->quad_atl(&positions[2], size, angel + 3.141593f, COLOR_WHITE, ref2, sdfd2);
-        state->quad_atl(&positions[4], size, angel + 1.570796f, COLOR_WHITE, ref3, sdfd3);
-        state->quad_atl(&positions[6], size, angel + 0.000000f, COLOR_WHITE, ref4, sdfd4);
+        for (size_t i = 0; i < 100; i++)
+        {
+            state->quad_atl(&positions[0], size, angel + 4.712389f + (0.05f * (float)i), COLOR_WHITE, ref1, sdfd1);
+            state->quad_atl(&positions[2], size, angel + 3.141593f + (0.05f * (float)i), COLOR_WHITE, ref2, sdfd2);
+            state->quad_atl(&positions[4], size, angel + 1.570796f + (0.05f * (float)i), COLOR_WHITE, ref3, sdfd3);
+            state->quad_atl(&positions[6], size, angel + 0.000000f + (0.05f * (float)i), COLOR_WHITE, ref4, sdfd4);
+        }
 
         // Begin window rendering
         wnd->begin_frame(list);

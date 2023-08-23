@@ -14,7 +14,7 @@
 #include <algorithm>
 
 #define ANT_SDF__NUM_SDF_DESCS 128
-#define ANT_SDF__NUM_SDF_QUADS 512
+#define ANT_SDF__NUM_SDF_QUADS 16384
 
 namespace ant::sdf
 {
@@ -79,6 +79,7 @@ namespace ant::sdf
 
             inline sdf_renderstate::texture_slot allocate_texture(ID3D12Resource* texture, D3D12_SHADER_RESOURCE_VIEW_DESC& texture_srv) { return m_state->allocate_texture(texture, texture_srv); }
             sdf_desc_slot allocate_sdf_desc(sdf_index sdf_function, float offset = 0.0f);
+            void set_sdf_desc(sdf_desc_slot slot, sdf_index sdf_function, float offset = 0.0f);
 
         private:
             void begin_copy(d3d_command_list::ptr cmd_list);
