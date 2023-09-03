@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{fd868dc0-89df-4ecc-9179-2388184aa509}</ProjectGuid>
+    <RootNamespace>sdfrender</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)build\$(Platform)-$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)-$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)build\$(Platform)-$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)build\$(Platform)-$(Configuration)\obj\$(ProjectName)\</IntDir>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="d3d\d3d_command_list.cpp" />
+    <ClCompile Include="d3d\d3d_descriptor_heap.cpp" />
+    <ClCompile Include="d3d\d3d_resource.cpp" />
+    <ClCompile Include="d3d\d3d_context.cpp" />
+    <ClCompile Include="d3d\d3d_executor.cpp" />
+    <ClCompile Include="d3d\d3d_texture_2d_rgba.cpp" />
+    <ClCompile Include="d3d\d3d_uploader.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="presentation\window.cpp" />
+    <ClCompile Include="presentation\window_factory.cpp" />
+    <ClCompile Include="sdf\sdf_rasterizer.cpp" />
+    <ClCompile Include="sdf\sdf_renderer.cpp" />
+    <ClCompile Include="sdf\sdf_renderstate.cpp" />
+    <ClCompile Include="sdf\sdf_texture.cpp" />
+    <ClCompile Include="util\blob.cpp" />
+    <ClCompile Include="util\dir.cpp" />
+    <ClCompile Include="util\exception.cpp" />
+    <ClCompile Include="util\image.cpp" />
+    <ClCompile Include="util\stb_rect_pack.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="d3d\d3d_command_list.h" />
+    <ClInclude Include="d3d\d3d_descriptor_heap.h" />
+    <ClInclude Include="d3d\d3d_resource.h" />
+    <ClInclude Include="d3d\d3d_context.h" />
+    <ClInclude Include="d3d\d3d_executor.h" />
+    <ClInclude Include="d3d\d3d_texture_2d_rgba.h" />
+    <ClInclude Include="d3d\d3d_uploader.h" />
+    <ClInclude Include="presentation\window.h" />
+    <ClInclude Include="presentation\window_factory.h" />
+    <ClInclude Include="sdf\sdf_rasterizer.h" />
+    <ClInclude Include="sdf\sdf_layout.h" />
+    <ClInclude Include="sdf\sdf_renderer.h" />
+    <ClInclude Include="sdf\sdf_renderstate.h" />
+    <ClInclude Include="sdf\sdf_texture.h" />
+    <ClInclude Include="util\blob.h" />
+    <ClInclude Include="util\comptr.h" />
+    <ClInclude Include="util\dir.h" />
+    <ClInclude Include="util\exception.h" />
+    <ClInclude Include="util\image.h" />
+    <ClInclude Include="util\stb_rect_pack.h" />
+    <ClInclude Include="win.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
