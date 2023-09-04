@@ -1,6 +1,12 @@
-# Visual studio output
-/.vs
-/out
+# Dependencies output
+/dependencies
 
-# Generic cmake output
+# Build output
 /build
+
+# Visual Studio
+/.vs
+**.sln
+**.vcxproj
+**.vcxproj.user
+**.vcxproj.filters
