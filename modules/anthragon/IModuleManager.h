@@ -92,5 +92,9 @@ namespace Anthragon
             virtual IoCProxy GetIoCContainer() = 0;
     };
 
+    /*!
+     * @brief Create an instance of the module manager
+     * @return Pointer to module manager
+    */
     std::shared_ptr<IModuleManager> CreateModuleManager();
 }

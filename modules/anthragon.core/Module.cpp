@@ -2,6 +2,10 @@
 
 const Anthragon::ModuleDescription& Anthragon::Detail::Core::Module::GetDescription() const
 {
+    const char* dependencies[] = {
+        nullptr,
+    };
+
     static ModuleDescription description{
         .name = "anthragon.core",
         .author = "Moxibyte GmbH",
@@ -11,7 +15,8 @@ const Anthragon::ModuleDescription& Anthragon::Detail::Core::Module::GetDescript
             .minor  = 0,
             .patch  = 0,
             .hotfix = 0,
-        }
+        },
+        .dependencies = dependencies
     };
     return description;
 }

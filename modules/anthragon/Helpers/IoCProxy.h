@@ -4,6 +4,9 @@
 
 namespace Anthragon
 {
+    /*!
+     * @brief Proxy class for the IInversionController interface
+    */
     class IoCProxy
     {
         public:

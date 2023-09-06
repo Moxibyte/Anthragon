@@ -6,6 +6,9 @@
 
 namespace Anthragon::Detail::Core
 {
+    /*!
+     * @brief IoC Implementation
+    */
     class IoCContainer : public IInversionController
     {
         private:
@@ -84,6 +87,11 @@ namespace Anthragon::Detail::Core
             void RegisterSingleton(const Locator& locator, const std::type_info* api, VoidPointer externalObject) override;
             bool RegisterRedirect(const Locator& source, const Locator& target) override;
             VoidPointer Get(const Locator& locator, const std::type_info* api, const Invoker& invoker) override;
+
+            /*!
+             * @brief Clears all IoC registrations
+            */
+            void Clear();
 
         private:
             /*!

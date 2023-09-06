@@ -124,3 +124,8 @@ Anthragon::IInversionController::VoidPointer Anthragon::Detail::Core::IoCContain
 {
     return std::any_cast<std::function<VoidPointer()>>(factory)();
 }
+
+void Anthragon::Detail::Core::IoCContainer::Clear()
+{
+    m_container.clear();
+}

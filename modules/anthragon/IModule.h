@@ -33,6 +33,7 @@ namespace Anthragon
         const char* author;
         const char* description;
         ModuleVersion version;
+        const char* const* dependencies;
     };
 
     /*!

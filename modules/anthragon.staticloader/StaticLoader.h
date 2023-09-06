@@ -3,9 +3,10 @@
 #include <anthragon/IModuleManager.h>
 #include <anthragon.staticloader/ModuleInstances.h>
 
+#include <map>
 #include <string>
+#include <vector>
 #include <memory>
-#include <unordered_map>
 
 namespace Anthragon::Detail
 {
@@ -25,14 +26,21 @@ namespace Anthragon::Detail
             IoCProxy GetIoCContainer() override;
 
             /*!
-             * @brief 
-             * @param name 
-             * @param ptr 
+             * @brief Registers a shared pointer (as static instance) to this loader
+             * @param name Name of thew module
+             * @param ptr Pointer to module
             */
-            void RegisterStaticModuleInstance(std::string_view name, std::unique_ptr<IModule>&& ptr);
+            void RegisterStaticModuleInstance(std::string_view name, std::shared_ptr<IModule>&& ptr);
 
         private:
-            std::unordered_map<std::string, std::unique_ptr<IModule>> m_modules;
+            /*!
+             * @brief Resolves dependencies (internally orders m_modules)
+             * @return True if dependencies where resolvable 
+            */
+            bool ResolveLoadOrder();
+
+        private:
+            std::map<std::string, std::shared_ptr<IModule>> m_modules;
             IInversionController* m_ioc = nullptr;
             bool m_loaded = false;
     };

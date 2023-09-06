@@ -9,6 +9,11 @@
 
 namespace Anthragon::Detail::Core
 {
+    /*!
+     * @brief Core module
+     * 
+     * Core implements IoC, Flow and Logic
+    */
     class Module : public IModule
     {
         public:
