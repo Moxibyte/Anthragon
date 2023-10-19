@@ -19,7 +19,10 @@ docs_dir: docs
 
 # Navigation
 nav:
-  - About: "index.md"
+  - Welcome: "index.md"
+  - About: 
+    - "Inversion of Control": "about/ioc.md"
+    - "Modules": "about/modules.md"
   - User Guide:
     - Dummy
   - Writing Widgets:
