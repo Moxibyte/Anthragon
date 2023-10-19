@@ -1,5 +1,7 @@
 #include "StaticLoader.h"
 
+#include <iostream>
+
 Anthragon::Detail::StaticLoader::StaticLoader()
 {
     RegisterModuleInstances(*this);
@@ -33,20 +35,16 @@ bool Anthragon::Detail::StaticLoader::Load()
             module.second->OnModuleLoad(*this);
         }
 
-        // TODO: Activate modules
-
         m_loaded = true;
         return true;
     }
     return false;
 }
 
-void Anthragon::Detail::StaticLoader::Shutdown()
+void Anthragon::Detail::StaticLoader::Unload()
 {
     if (m_loaded)
     {
-        // TODO: Deactivate modules
-
         // Unload all modules
         for (auto& module : m_modules)
         {
@@ -57,17 +55,22 @@ void Anthragon::Detail::StaticLoader::Shutdown()
     }
 }
 
-void Anthragon::Detail::StaticLoader::SetIoCContainer(IInversionController* controller)
+void Anthragon::Detail::StaticLoader::SetFunction(ModuleFunctionType type, const ModuleFunction& function)
 {
-    if (!m_ioc)
-    {
-        m_ioc = controller;
-    }
+    std::cout << (int)type << " " << function.type().name() << std::endl;
+    m_functions[type] = function;
 }
 
-Anthragon::IoCProxy Anthragon::Detail::StaticLoader::GetIoCContainer()
+Anthragon::IModuleManager::ModuleFunction Anthragon::Detail::StaticLoader::GetFunction(ModuleFunctionType type)
 {
-    return IoCProxy(*m_ioc);
+    ModuleFunction function;
+    auto it = m_functions.find(type);
+    if (it != m_functions.end())
+    {
+        function = (*it).second;
+        std::cout << (int)type << " " << function.type().name() << std::endl;
+    }
+    return function;
 }
 
 void Anthragon::Detail::StaticLoader::RegisterStaticModuleInstance(std::string_view name, std::shared_ptr<IModule>&& ptr)
@@ -147,7 +150,27 @@ bool Anthragon::Detail::StaticLoader::ResolveLoadOrder()
     return true;
 }
 
-std::shared_ptr<Anthragon::IModuleManager> Anthragon::CreateModuleManager()
+Anthragon::ILibContext* Anthragon::Detail::StaticLoader::CreateContext()
 {
-    return std::make_shared<Detail::StaticLoader>();
+    auto creator = std::any_cast<IModuleManager::FCreateContext>(GetFunction(IModuleManager::ModuleFunctionType::CreateContext));
+    auto* ctx = creator(this);
+    if (ctx)
+    {
+        for (auto& module : m_modules)
+        {
+            module.second->Init(*ctx);
+        }
+
+        for (auto& module : m_modules)
+        {
+            module.second->PostInit(*ctx);
+        }
+    }
+    return ctx;
+}
+
+Anthragon::IModuleManager& Anthragon::GetModuleManager()
+{
+    static Detail::StaticLoader loader;
+    return loader;
 }

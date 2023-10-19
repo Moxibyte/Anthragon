@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 namespace Anthragon::Detail
 {
@@ -21,9 +22,12 @@ namespace Anthragon::Detail
             const IModule* GetModule(std::string_view name) const override;
             bool ConfigureManager(ConfigurationKey key, std::string_view value) override;
             bool Load() override;
-            void Shutdown() override;
-            void SetIoCContainer(IInversionController* controller) override;
-            IoCProxy GetIoCContainer() override;
+            void Unload() override;
+            void SetFunction(ModuleFunctionType type, const ModuleFunction& function) override;
+            ModuleFunction GetFunction(ModuleFunctionType type) override;
+            
+            ILibContext* CreateContext() override;
+            
 
             /*!
              * @brief Registers a shared pointer (as static instance) to this loader
@@ -41,13 +45,14 @@ namespace Anthragon::Detail
 
         private:
             std::map<std::string, std::shared_ptr<IModule>> m_modules;
-            IInversionController* m_ioc = nullptr;
+            std::unordered_map<ModuleFunctionType, ModuleFunction> m_functions;
+
             bool m_loaded = false;
     };
 }
 
 namespace Anthragon
 {
-    std::shared_ptr<IModuleManager> CreateModuleManager();
+    IModuleManager& GetModuleManager();
 }
 

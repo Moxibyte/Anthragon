@@ -23,17 +23,47 @@ const Anthragon::ModuleDescription& Anthragon::Detail::Core::Module::GetDescript
 
 void Anthragon::Detail::Core::Module::OnModuleLoad(IModuleManager& loader)
 {
-    m_ioc = std::make_unique<IoCContainer>();
-    loader.SetIoCContainer(m_ioc.get());
+    IModuleManager::FCreateContext fCreateContext =
+        [](IModuleManager* manager)
+        {
+            ILibContext* ctx = nullptr;
+            auto libAllocAx = manager->GetFunction(IModuleManager::ModuleFunctionType::MemoryAllocate);
+            if (libAllocAx.has_value())
+            {
+                ctx = (ILibContext*)std::any_cast<std::function<void* (size_t)>>(libAllocAx)(sizeof(LibContext));
+            }
+            else
+            {
+                ctx = (ILibContext*)malloc(sizeof(LibContext));
+            }
+            new((LibContext*)ctx)LibContext(*manager);
+            return ctx;
+        }
+    ;
+    loader.SetFunction(IModuleManager::ModuleFunctionType::CreateContext, fCreateContext);
 }
 
 void Anthragon::Detail::Core::Module::OnModuleUnload()
 {
-    m_ioc = nullptr;
+
 }
 
-bool Anthragon::Detail::Core::Module::Instantiate(void)
+void Anthragon::Detail::Core::Module::Init(ILibContext& ctx)
 {
-    // throw std::logic_error("The method or operation is not implemented.");
-    return false;
+    
+}
+
+void Anthragon::Detail::Core::Module::PostInit(ILibContext& ctx)
+{
+    
+}
+
+void Anthragon::Detail::Core::Module::Shutdown(ILibContext& ctx)
+{
+    
+}
+
+void Anthragon::Detail::Core::Module::PostShutdown(ILibContext& ctx)
+{
+    
 }

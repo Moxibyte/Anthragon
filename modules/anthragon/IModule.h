@@ -1,5 +1,7 @@
 #pragma once
 
+#include <anthragon/ILibContext.h>
+
 #include <cstdint>
 
 namespace Anthragon
@@ -44,9 +46,57 @@ namespace Anthragon
         public:
             ~IModule() = default;
 
+            /*!
+             * @brief Retrieve a description from the module
+             * @return Reference to module
+            */
             virtual const ModuleDescription& GetDescription() const = 0;
+            
+            /*!
+             * @brief Called when the module is initialized 
+             * 
+             * THIS IS CALLED ONCE PER APP
+             * @param loader Module manager for callback setup
+            */
             virtual void OnModuleLoad(IModuleManager& loader) = 0;
+            
+            /*!
+             * @brief Called when the module is unloaded
+             * 
+             * THIS IS CALLED ONCE PER APP
+            */
             virtual void OnModuleUnload() = 0;
-            virtual bool Instantiate(void) = 0;
+
+            /*!
+             * @brief Called when initialized
+             * 
+             * the module can't assume that systems are initialized now
+             * @param ioc Inversion of control container
+            */
+            virtual void Init(ILibContext& ioc) = 0;
+            
+            /*!
+             * @brief Called after init 
+             * 
+             * The module can assume that all subsystems are initialized
+             * @param ioc Inversion of control container
+            */
+            virtual void PostInit(ILibContext& ioc) = 0;
+            
+            /*!
+             * @brief Called on shutdown
+             * 
+             * This functions shall not destroy instance and only release references
+             * @param ioc Inversion of control container
+            */
+            virtual void Shutdown(ILibContext& ioc) = 0;
+            
+            /*!
+             * @brief Called directly after shutdown.
+             * 
+             * The module can expect that no external references to the internal objects are hold
+             * @param ioc Inversion of control container
+            */
+            virtual void PostShutdown(ILibContext& ioc) = 0;
     };
 }

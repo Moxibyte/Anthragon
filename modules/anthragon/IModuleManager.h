@@ -1,8 +1,8 @@
 #pragma once
 
 #include <anthragon/IModule.h>
+#include <anthragon/ILibContext.h>
 #include <anthragon/IInversionController.h>
-#include <anthragon/Helpers/IoCProxy.h>
 
 #include <string_view>
 
@@ -16,21 +16,24 @@ namespace Anthragon
     class IModuleManager
     {
         public:
+            /*!
+             * @brief Make of key to configure
+            */
             enum class ConfigurationKey
             {
                 /*!
                  * @brief Mode of dynamic module loading
                  * 
                  * Possible values:
-                 * "dir"        : Loads modules from directory (CFKey_DynamicModuleDir or current binary path)
-                 * "manual"     : Loads modules manually (Set CFKey_DynamicLoadNow multiple time. One time for each module)
+                 * "dir"        : Loads modules from directory (DynamicModuleDir or current binary path)
+                 * "manual"     : Loads modules manually (Set DynamicLoadNow multiple time. One time for each module)
                 */
-                CFKey_DynamicMode = 1,
+                DynamicMode = 1,
 
                 /*!
                  * @brief Directory from which dynamic modules shall be loaded
                 */
-                CFKey_DynamicModuleDir = 2,
+                DynamicModuleDir = 2,
             
                 /*!
                  * @brief Module from dir loading behavior
@@ -40,15 +43,62 @@ namespace Anthragon
                  * "relaxed"    : If loading from module dir failles the default system loading path will be traversed
                  * "reverse"    : Same as relaxed but system dirs will be checked first
                 */
-                CFKey_DynamicDirMode = 3,
+                DynamicDirMode = 3,
 
                 /*!
                  * @brief Every set call on this configuration key will add the specified module to the loading list
-                 * This will only work if "CFKey_DynamicMode" is on "manual". A full qualified path is required!
+                 * This will only work if "CDynamicMode" is on "manual". A full qualified path is required!
                  * Does not actually load the module!
                 */
-                CFKey_DynamicLoadNow = 1001,
+                DynamicLoadNow = 1001,
             };
+
+            /*!
+             * @brief Type of function supported by module
+            */
+            enum class ModuleFunctionType
+            {
+                /*!
+                 * @brief Function for anthragon context creation
+                 * 
+                 * Type: std::function<ILibContext*(IModuleManager*)>
+                 * 
+                 * THIS IS NOT INITEDED TO BE IMPLEMENTED BY ANYBODY ELSE
+                 * THAN THE CORE ITSELF
+                */
+                CreateContext = 0,
+
+                /*!
+                 * @brief Memory allocation callback
+                 * 
+                 * Type: std::function<void*(size_t)>
+                */
+                MemoryAllocate = 2,
+
+                /*!
+                 * @brief Memory re allocation callback
+                 * 
+                 * Type: std::function<void*(void*, size_t)>
+                */
+                MemoryReAllocate = 3,
+
+                /*!
+                 * @brief Memory freeing callback
+                 * 
+                 * Type: std::function<void(void*)>
+                */
+                MemoryFree = 4,
+            };
+
+            /*!
+             * @brief Module functions are std::function<R(V..)> values encoded in std::any
+            */
+            using ModuleFunction = std::any;
+
+            using FCreateContext = std::function<ILibContext*(IModuleManager*)>;
+            using FMemoryAllocate = std::function<void*(size_t)>;
+            using FMemoryReAllocate = std::function<void*(void*, size_t)>;
+            using FMemoryFree = std::function<void(void*)>;
 
         public:
             ~IModuleManager() = default;
@@ -77,24 +127,32 @@ namespace Anthragon
             /*!
              * @brief Initializes module shutdown and unloads modules
             */
-            virtual void Shutdown() = 0;
-
-            /*!
-             * @brief Sets the inversion of control container (can only be called once)
-             * @param controller IoC Container
-            */
-            virtual void SetIoCContainer(IInversionController* controller) = 0;
+            virtual void Unload() = 0;
             
             /*!
-             * @brief Retrieves the inversion of control container
-             * @return IoC Container
+             * @brief Sets a function
+             * @param type 
+             * @param function 
             */
-            virtual IoCProxy GetIoCContainer() = 0;
+            virtual void SetFunction(ModuleFunctionType type, const ModuleFunction& function) = 0;
+
+            /*!
+             * @brief 
+             * @param type 
+             * @return 
+            */
+            virtual ModuleFunction GetFunction(ModuleFunctionType type) = 0;
+
+            /*!
+             * @brief Creates a new library context
+             * @return Pointer to context
+            */
+            virtual ILibContext* CreateContext() = 0;
     };
 
     /*!
-     * @brief Create an instance of the module manager
+     * @brief Retrieves an instance of the static module manager
      * @return Pointer to module manager
     */
-    std::shared_ptr<IModuleManager> CreateModuleManager();
+    IModuleManager& GetModuleManager();
 }

@@ -3,6 +3,7 @@
 #include <anthragon/IModule.h>
 #include <anthragon/IModuleManager.h>
 
+#include <anthragon.core/Infrastructure/LibContext.h>
 #include <anthragon.core/Infrastructure/IoCContainer.h>
 
 #include <memory>
@@ -20,9 +21,11 @@ namespace Anthragon::Detail::Core
             const ModuleDescription& GetDescription() const override;
             void OnModuleLoad(IModuleManager& loader) override;
             void OnModuleUnload() override;
-            bool Instantiate(void) override;
 
-        private:
-            std::unique_ptr<IoCContainer> m_ioc = nullptr;
+            void Init(ILibContext& ioctxc) override;
+            void PostInit(ILibContext& ctx) override;
+            void Shutdown(ILibContext& ctx) override;
+            void PostShutdown(ILibContext& ctx) override;
+
     };
 }
